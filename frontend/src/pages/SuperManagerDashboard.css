@@ -176,3 +176,11 @@ body {
     width: 100%;
   }
 }
+.user-avatar {
+  font-size: 32px; /* Match your original image size */
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

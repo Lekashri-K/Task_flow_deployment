@@ -1,0 +1,44 @@
+/* Delete Button Styling */
+.btn-delete {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: #bb2d3b;
+  border-color: #b02a37;
+  color: white;
+}
+
+/* Pagination Styling */
+.pagination-custom {
+  color: #495057 !important;
+  border: 1px solid #dee2e6;
+}
+
+.pagination-custom:hover {
+  background-color: #f8f9fa;
+}
+
+.page-item.active .pagination-custom {
+  background-color: #f8f9fa;
+  border-color: #dee2e6;
+  color: #495057 !important;
+  font-weight: bold;
+}
+
+/* Search Bar Styling */
+.search-input {
+  border-left: none;
+}
+
+.search-input:focus {
+  box-shadow: none;
+  border-color: #ced4da;
+}
+
+.search-icon {
+  background-color: white;
+  border-right: none;
+}

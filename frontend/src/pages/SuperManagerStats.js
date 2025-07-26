@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { superManagerApi } from '../api/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -8,6 +9,7 @@ const SuperManagerStats = () => {
     total_users: 0,
     active_projects: 0,
     pending_tasks: 0,
+    in_progress_tasks: 0,
     completed_tasks: 0
   });
   const [loading, setLoading] = useState(true);
@@ -33,14 +35,14 @@ const SuperManagerStats = () => {
 
   if (loading) {
     return (
-      <div className="row mb-4">
-        {[1, 2, 3, 4].map((i) => (
-          <div className="col-md-3" key={i}>
-            <div className="stat-card p-3 bg-white">
+      <div className="row mb-4 g-3" style={{ minHeight: '120px' }}>
+        {[1, 2, 3, 4, 5].map((i) => (
+          <div className="col" key={i}>
+            <div className="stat-card p-3 bg-white rounded-3 shadow-sm h-100">
               <div className="placeholder-glow">
-                <h6 className="text-muted mb-2 placeholder col-5"></h6>
-                <h3 className="mb-0 placeholder col-3"></h3>
-                <small className="text-muted placeholder col-7"></small>
+                <h5 className="text-muted mb-2 placeholder col-6"></h5>
+                <h3 className="mb-1 placeholder col-4"></h3>
+                <small className="text-muted placeholder col-8"></small>
               </div>
             </div>
           </div>
@@ -60,69 +62,95 @@ const SuperManagerStats = () => {
   }
 
   return (
-    <div className="row mb-4">
-      {/* Total Users Card */}
-      <div className="col-md-3">
-        <div className="stat-card p-3 bg-white rounded-3 shadow-sm">
-          <div className="d-flex justify-content-between">
-            <div>
-              <h6 className="text-muted mb-2">Total Users</h6>
-              <h3 className="mb-0">{stats.total_users}</h3>
+    <div className="row mb-4 g-3" style={{ minHeight: '120px' }}>
+      <div className="col">
+        <Link to="/supermanager/users" className="text-decoration-none">
+          <div className="stat-card p-3 bg-white rounded-3 shadow-sm h-100">
+            <div className="d-flex flex-column h-100">
+              <div className="d-flex justify-content-between align-items-start">
+                <h5 className="text-muted mb-2">Total Users</h5>
+                <div className="icon bg-light-primary text-primary rounded-circle d-flex align-items-center justify-content-center" 
+                     style={{ width: '36px', height: '36px', fontSize: '1rem' }}>
+                  <i className="bi bi-people"></i>
+                </div>
+              </div>
+              <h3 className="mb-1">{stats.total_users}</h3>
               <small className="text-muted">All registered users</small>
             </div>
-            <div className="icon bg-light-primary text-primary rounded-circle d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
-              <i className="bi bi-people fs-5"></i>
-            </div>
           </div>
-        </div>
+        </Link>
       </div>
 
-      {/* Active Projects Card */}
-      <div className="col-md-3">
-        <div className="stat-card p-3 bg-white rounded-3 shadow-sm">
-          <div className="d-flex justify-content-between">
-            <div>
-              <h6 className="text-muted mb-2">Active Projects</h6>
-              <h3 className="mb-0">{stats.active_projects}</h3>
+      <div className="col">
+        <Link to="/projects" className="text-decoration-none">
+          <div className="stat-card p-3 bg-white rounded-3 shadow-sm h-100">
+            <div className="d-flex flex-column h-100">
+              <div className="d-flex justify-content-between align-items-start">
+                <h5 className="text-muted mb-2">Active Projects</h5>
+                <div className="icon bg-light-success text-success rounded-circle d-flex align-items-center justify-content-center" 
+                     style={{ width: '36px', height: '36px', fontSize: '1rem' }}>
+                  <i className="bi bi-kanban"></i>
+                </div>
+              </div>
+              <h3 className="mb-1">{stats.active_projects}</h3>
               <small className="text-muted">Currently running</small>
             </div>
-            <div className="icon bg-light-success text-success rounded-circle d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
-              <i className="bi bi-kanban fs-5"></i>
-            </div>
           </div>
-        </div>
+        </Link>
       </div>
-
-      {/* Pending Tasks Card */}
-      <div className="col-md-3">
-        <div className="stat-card p-3 bg-white rounded-3 shadow-sm">
-          <div className="d-flex justify-content-between">
-            <div>
-              <h6 className="text-muted mb-2">Pending Tasks</h6>
-              <h3 className="mb-0">{stats.pending_tasks}</h3>
+      
+      <div className="col">
+        <Link to="/tasks?status=pending" className="text-decoration-none">
+          <div className="stat-card p-3 bg-white rounded-3 shadow-sm h-100">
+            <div className="d-flex flex-column h-100">
+              <div className="d-flex justify-content-between align-items-start">
+                <h5 className="text-muted mb-2">Pending Tasks</h5>
+                <div className="icon bg-light-warning text-warning rounded-circle d-flex align-items-center justify-content-center" 
+                     style={{ width: '36px', height: '36px', fontSize: '1rem' }}>
+                  <i className="bi bi-list-task"></i>
+                </div>
+              </div>
+              <h3 className="mb-1">{stats.pending_tasks}</h3>
               <small className="text-muted">Awaiting completion</small>
             </div>
-            <div className="icon bg-light-warning text-warning rounded-circle d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
-              <i className="bi bi-list-task fs-5"></i>
-            </div>
           </div>
-        </div>
+        </Link>
       </div>
 
-      {/* Completed Tasks Card */}
-      <div className="col-md-3">
-        <div className="stat-card p-3 bg-white rounded-3 shadow-sm">
-          <div className="d-flex justify-content-between">
-            <div>
-              <h6 className="text-muted mb-2">Completed Tasks</h6>
-              <h3 className="mb-0">{stats.completed_tasks}</h3>
-              <small className="text-muted">Finished tasks</small>
-            </div>
-            <div className="icon bg-light-info text-info rounded-circle d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
-              <i className="bi bi-check-circle fs-5"></i>
+      <div className="col">
+        <Link to="/tasks?status=in_progress" className="text-decoration-none">
+          <div className="stat-card p-3 bg-white rounded-3 shadow-sm h-100">
+            <div className="d-flex flex-column h-100">
+              <div className="d-flex justify-content-between align-items-start">
+                <h5 className="text-muted mb-2">In Progress</h5>
+                <div className="icon bg-light-info text-info rounded-circle d-flex align-items-center justify-content-center" 
+                     style={{ width: '36px', height: '36px', fontSize: '1rem' }}>
+                  <i className="bi bi-hourglass-split"></i>
+                </div>
+              </div>
+              <h3 className="mb-1">{stats.in_progress_tasks}</h3>
+              <small className="text-muted">Currently working</small>
             </div>
           </div>
-        </div>
+        </Link>
+      </div>
+
+      <div className="col">
+        <Link to="/tasks?status=completed" className="text-decoration-none">
+          <div className="stat-card p-3 bg-white rounded-3 shadow-sm h-100">
+            <div className="d-flex flex-column h-100">
+              <div className="d-flex justify-content-between align-items-start">
+                <h5 className="text-muted mb-2">Completed</h5>
+                <div className="icon bg-light-success text-success rounded-circle d-flex align-items-center justify-content-center" 
+                     style={{ width: '36px', height: '36px', fontSize: '1rem' }}>
+                  <i className="bi bi-check-circle"></i>
+                </div>
+              </div>
+              <h3 className="mb-1">{stats.completed_tasks}</h3>
+              <small className="text-muted">Finished tasks</small>
+            </div>
+          </div>
+        </Link>
       </div>
     </div>
   );

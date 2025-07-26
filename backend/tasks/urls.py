@@ -6,7 +6,8 @@ from .views import (
     SuperManagerDashboardStats,
     SuperManagerUserViewSet,
     SuperManagerProjectViewSet,
-    SuperManagerTaskViewSet
+    SuperManagerTaskViewSet,
+    RecentActivityView  # ✅ Add this line
 )
 from rest_framework.routers import DefaultRouter
 
@@ -16,8 +17,9 @@ router.register(r'supermanager/projects', SuperManagerProjectViewSet, basename='
 router.register(r'supermanager/tasks', SuperManagerTaskViewSet, basename='supermanager-tasks')
 
 urlpatterns = [
-    path('login/', LoginView.as_view(permission_classes=[AllowAny]), name='login'),  # ✅ fixed
+    path('login/', LoginView.as_view(permission_classes=[AllowAny]), name='login'),
     path('user/', UserView.as_view(), name='user'),
     path('supermanager-dashboard-stats/', SuperManagerDashboardStats.as_view(), name='supermanager-dashboard-stats'),
+    path('recent-activity/', RecentActivityView.as_view(), name='recent-activity'),
     path('', include(router.urls)),
 ]

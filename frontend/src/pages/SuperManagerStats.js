@@ -63,6 +63,7 @@ const SuperManagerStats = () => {
 
   return (
     <div className="row mb-4 g-3" style={{ minHeight: '120px' }}>
+      {/* Total Users Card */}
       <div className="col">
         <Link to="/supermanager/users" className="text-decoration-none">
           <div className="stat-card p-3 bg-white rounded-3 shadow-sm h-100">
@@ -70,7 +71,7 @@ const SuperManagerStats = () => {
               <div className="d-flex justify-content-between align-items-start">
                 <h5 className="text-muted mb-2">Total Users</h5>
                 <div className="icon bg-light-primary text-primary rounded-circle d-flex align-items-center justify-content-center" 
-                     style={{ width: '36px', height: '36px', fontSize: '1rem' }}>
+                     style={{ width: '36px', height: '36px', fontSize: '1rem'}}>
                   <i className="bi bi-people"></i>
                 </div>
               </div>
@@ -81,6 +82,7 @@ const SuperManagerStats = () => {
         </Link>
       </div>
 
+      {/* Active Projects Card */}
       <div className="col">
         <Link to="/projects" className="text-decoration-none">
           <div className="stat-card p-3 bg-white rounded-3 shadow-sm h-100">
@@ -99,8 +101,9 @@ const SuperManagerStats = () => {
         </Link>
       </div>
       
+      {/* Pending Tasks Card - Now navigates to pending tasks section */}
       <div className="col">
-        <Link to="/tasks?status=pending" className="text-decoration-none">
+        <Link to="/tasks#pending" className="text-decoration-none">
           <div className="stat-card p-3 bg-white rounded-3 shadow-sm h-100">
             <div className="d-flex flex-column h-100">
               <div className="d-flex justify-content-between align-items-start">
@@ -117,8 +120,9 @@ const SuperManagerStats = () => {
         </Link>
       </div>
 
+      {/* In Progress Tasks Card - Now navigates to in-progress tasks section */}
       <div className="col">
-        <Link to="/tasks?status=in_progress" className="text-decoration-none">
+        <Link to="/tasks#inProgress" className="text-decoration-none">
           <div className="stat-card p-3 bg-white rounded-3 shadow-sm h-100">
             <div className="d-flex flex-column h-100">
               <div className="d-flex justify-content-between align-items-start">
@@ -135,8 +139,9 @@ const SuperManagerStats = () => {
         </Link>
       </div>
 
+      {/* Completed Tasks Card - Now navigates to completed tasks section */}
       <div className="col">
-        <Link to="/tasks?status=completed" className="text-decoration-none">
+        <Link to="/tasks#completed" className="text-decoration-none">
           <div className="stat-card p-3 bg-white rounded-3 shadow-sm h-100">
             <div className="d-flex flex-column h-100">
               <div className="d-flex justify-content-between align-items-start">

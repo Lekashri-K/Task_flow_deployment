@@ -1,0 +1,26 @@
+.main-content {
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.project-card {
+  transition: transform 0.2s;
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.header {
+  border-bottom: 1px solid #dee2e6;
+  margin-bottom: 1.5rem;
+}
+
+.progress-sm {
+  height: 6px;
+}
+
+.user-avatar {
+  color: #6c757d;
+}

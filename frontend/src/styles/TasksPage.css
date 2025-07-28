@@ -1,0 +1,52 @@
+/* Custom Tab Styling */
+.nav-tabs-custom {
+  border-bottom: 2px solid #dee2e6;
+}
+
+.nav-tabs-custom .nav-link {
+  border: none;
+  color: #6c757d;
+  font-weight: 500;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+}
+
+.nav-tabs-custom .nav-link.active {
+  color: #0d6efd;
+  background-color: transparent;
+  border-bottom: 3px solid #0d6efd;
+}
+
+/* Task Card Hover Effect */
+.task-card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.task-card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+}
+
+/* Modal Backdrop */
+.modal-backdrop {
+  background-color: rgba(0,0,0,0.5);
+}
+
+/* Empty State Styling */
+.text-center.py-5 {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .nav-tabs-custom .nav-link {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+  
+  .nav-tabs-custom .nav-link i {
+    margin-right: 4px !important;
+  }
+}

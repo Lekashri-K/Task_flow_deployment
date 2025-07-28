@@ -1,17 +1,19 @@
+
+# views.py
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
-from django.db.models import Q
 from django.utils import timezone
 from datetime import timedelta
 from django.utils.timezone import now
-
+from django.db.models import Q, Count, F, Case, When, FloatField
+from django.db.models.functions import Coalesce
 from .models import CustomUser, Project, Task
 from .serializers import UserSerializer, ProjectSerializer, TaskSerializer
-
+from django.db.models.functions import TruncDate
 class SuperManagerDashboardStats(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -76,48 +78,82 @@ class SuperManagerUserViewSet(viewsets.ModelViewSet):
 
 
 class SuperManagerProjectViewSet(viewsets.ModelViewSet):
-    queryset = Project.objects.all().order_by('-created_at')  # Newest first
+    queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
         try:
-            assigned_to_id = request.data.get('assigned_to')
-            if not assigned_to_id:
-                return Response({'message': 'Manager assignment is required'}, status=status.HTTP_400_BAD_REQUEST)
+            # Ensure the request user is a supermanager
+            if request.user.role != 'supermanager':
+                return Response(
+                    {'message': 'Only supermanagers can create projects'},
+                    status=status.HTTP_403_FORBIDDEN
+                )
 
-            assigned_to = CustomUser.objects.filter(id=assigned_to_id, role='manager').first()
-            if not assigned_to:
-                return Response({'message': 'Invalid manager ID provided'}, status=status.HTTP_400_BAD_REQUEST)
-
-            project = Project.objects.create(
-                name=request.data.get('name'),
-                description=request.data.get('description', ''),
-                created_by=request.user,
-                assigned_to=assigned_to,
-                deadline=request.data.get('deadline')
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            
+            # Set the created_by field to the current user
+            serializer.save(created_by=request.user)
+            
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            
+        except Exception as e:
+            return Response(
+                {'message': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
             )
 
-            serializer = self.get_serializer(project)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        except Exception as e:
-            return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+# class SuperManagerTaskViewSet(viewsets.ModelViewSet):
+#     serializer_class = TaskSerializer
+#     permission_classes = [IsAuthenticated]
 
+#     def get_queryset(self):
+#         if self.request.user.role != 'supermanager':
+#             return Task.objects.none()
+            
+#         queryset = Task.objects.all().order_by('-created_at')
+        
+#         project_id = self.request.query_params.get('project')
+#         if project_id:
+#             queryset = queryset.filter(project_id=project_id)
+            
+#         return queryset
 
+#     def perform_create(self, serializer):
+#         serializer.save(assigned_by=self.request.user)
+
+#     def get_serializer_context(self):
+#         context = super().get_serializer_context()
+#         context['request'] = self.request
+#         return context
 class SuperManagerTaskViewSet(viewsets.ModelViewSet):
-    queryset = Task.objects.all().order_by('-created_at')  # Newest first
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        if self.request.user.role == 'supermanager':
-            return super().get_queryset()
-        return Task.objects.none()
+        if self.request.user.role != 'supermanager':
+            return Task.objects.none()
+            
+        queryset = Task.objects.select_related(
+            'assigned_to', 'assigned_by', 'project'
+        ).order_by('-created_at')
+        
+        project_id = self.request.query_params.get('project')
+        if project_id:
+            queryset = queryset.filter(project_id=project_id)
+            
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(assigned_by=self.request.user)
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
 class RecentActivityView(APIView):
     permission_classes = [IsAuthenticated]
@@ -165,3 +201,76 @@ class RecentActivityView(APIView):
         # Sort by timestamp descending and limit to 10 most recent
         activities.sort(key=lambda x: x['timestamp'], reverse=True)
         return Response(activities[:10])
+
+
+class ReportView(APIView):
+    def get(self, request):
+        project_id = request.query_params.get('project')
+        
+        # Get all projects for the filter dropdown
+        all_projects = Project.objects.all()
+        
+        # Base queryset with optional project filter
+        tasks_queryset = Task.objects.all()
+        if project_id:
+            tasks_queryset = tasks_queryset.filter(project_id=project_id)
+        
+        # Calculate basic statistics
+        total_tasks = tasks_queryset.count()
+        completed_tasks = tasks_queryset.filter(status='completed').count()
+        pending_tasks = tasks_queryset.filter(status='pending').count()
+        in_progress_tasks = tasks_queryset.filter(status='in_progress').count()
+        overdue_tasks = tasks_queryset.filter(
+            Q(due_date__lt=timezone.now().date()) & 
+            ~Q(status='completed')
+        ).count()
+        
+        # Status distribution for chart
+        status_labels = ['Pending', 'In Progress', 'Completed', 'Overdue']
+        status_data = [
+            pending_tasks,
+            in_progress_tasks,
+            completed_tasks,
+            overdue_tasks
+        ]
+        
+        # Projects progress
+        projects_queryset = Project.objects.all()
+        if project_id:
+            projects_queryset = projects_queryset.filter(id=project_id)
+            
+        projects_progress = []
+        for project in projects_queryset:
+            project_tasks = project.tasks.all()
+            total = project_tasks.count()
+            completed = project_tasks.filter(status='completed').count()
+            
+            progress = 0
+            if total > 0:
+                progress = (completed / total) * 100
+                
+            projects_progress.append({
+                'id': project.id,
+                'name': project.name,
+                'progress': progress,
+                'total_tasks': total,
+                'completed_tasks': completed
+            })
+        
+        response_data = {
+            'stats': {
+                'total_tasks': total_tasks,
+                'completed_tasks': completed_tasks,
+                'pending_tasks': pending_tasks,
+                'in_progress_tasks': in_progress_tasks,
+                'overdue_tasks': overdue_tasks,
+            },
+            'statusDistribution': {
+                'labels': status_labels,
+                'data': status_data
+            },
+            'projectsProgress': projects_progress,
+            'allProjects': [{'id': p.id, 'name': p.name} for p in all_projects],
+        }
+        
+        return Response(response_data)

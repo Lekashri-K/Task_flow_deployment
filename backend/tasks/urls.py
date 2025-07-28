@@ -1,5 +1,35 @@
+# from django.urls import path, include 
+# from rest_framework.permissions import AllowAny
+# from .views import ReportsAPIView
+
+
+# from .views import (
+#     LoginView, 
+#     UserView,
+#     SuperManagerDashboardStats,
+#     SuperManagerUserViewSet,
+#     SuperManagerProjectViewSet,
+#     SuperManagerTaskViewSet,
+#     RecentActivityView  # ✅ Add this line
+# )
+# from rest_framework.routers import DefaultRouter
+
+# router = DefaultRouter()
+# router.register(r'supermanager/users', SuperManagerUserViewSet, basename='supermanager-users')
+# router.register(r'supermanager/projects', SuperManagerProjectViewSet, basename='supermanager-projects')
+# router.register(r'supermanager/tasks', SuperManagerTaskViewSet, basename='supermanager-tasks')
+
+# urlpatterns = [
+#     path('login/', LoginView.as_view(permission_classes=[AllowAny]), name='login'),
+#     path('user/', UserView.as_view(), name='user'),
+#     path('supermanager-dashboard-stats/', SuperManagerDashboardStats.as_view(), name='supermanager-dashboard-stats'),
+#     path('recent-activity/', RecentActivityView.as_view(), name='recent-activity'),
+#     path('reports/', ReportsAPIView.as_view(), name='reports-api'),
+#     path('', include(router.urls)),
+# ]
 from django.urls import path, include 
 from rest_framework.permissions import AllowAny
+from .views import ReportView
 from .views import (
     LoginView, 
     UserView,
@@ -7,7 +37,7 @@ from .views import (
     SuperManagerUserViewSet,
     SuperManagerProjectViewSet,
     SuperManagerTaskViewSet,
-    RecentActivityView  # ✅ Add this line
+    RecentActivityView
 )
 from rest_framework.routers import DefaultRouter
 
@@ -21,5 +51,6 @@ urlpatterns = [
     path('user/', UserView.as_view(), name='user'),
     path('supermanager-dashboard-stats/', SuperManagerDashboardStats.as_view(), name='supermanager-dashboard-stats'),
     path('recent-activity/', RecentActivityView.as_view(), name='recent-activity'),
+    path('reports/', ReportView.as_view(), name='reports'),
     path('', include(router.urls)),
 ]

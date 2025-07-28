@@ -196,7 +196,7 @@ const QuickActions = ({ refreshTasks, refreshProjects, refreshUsers }) => {
                 <div className="card-body">
                     <div className="row g-2">
                         <div className="col-6">
-                            <button
+                            <button 
                                 className="btn btn-quick-action w-100 text-start p-3"
                                 onClick={() => handleShowModal('user')}
                             >

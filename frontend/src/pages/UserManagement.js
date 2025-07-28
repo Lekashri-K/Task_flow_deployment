@@ -5,7 +5,7 @@ import { superManagerApi } from '../api/api';
 import './UserManagement.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-
+import Sidebar from '../components/Sidebar';
 
 const UserManagement = () => {
   const { user, logout } = useAuth();
@@ -134,39 +134,7 @@ const UserManagement = () => {
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="col-md-2 sidebar p-0">
-          <div className="p-4 text-center">
-            <h4 className="text-primary fw-bold">TaskFlow</h4>
-            <p className="text-muted small">Admin Dashboard</p>
-          </div>
-          <ul className="nav flex-column px-3">
-            <li className="nav-item">
-              <Link className="nav-link" to="/supermanager">
-                <i className="bi bi-speedometer2 me-2"></i>Dashboard
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link active" to="/supermanager/users">
-                <i className="bi bi-people me-2"></i>Users
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/supermanager/projects">
-                <i className="bi bi-kanban me-2"></i>Projects
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/supermanager/tasks">
-                <i className="bi bi-list-task me-2"></i>Tasks
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/supermanager/reports">
-                <i className="bi bi-graph-up me-2"></i>Reports
-              </Link>
-            </li>
-          </ul>
-        </div>
+         <Sidebar />
 
         <div className="col-md-10 main-content">
           <div className="header d-flex justify-content-between align-items-center">

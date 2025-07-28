@@ -1,0 +1,99 @@
+/* Sidebar styles */
+.sidebar {
+  width: 250px;
+  min-height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  transition: all 0.3s;
+}
+
+.sidebar-header {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-menu {
+  padding: 0;
+  list-style: none;
+}
+
+.sidebar-item {
+  display: block;
+  padding: 12px 20px;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.sidebar-item:hover, .sidebar-item.active {
+  color: white;
+  background-color: rgba(255, 255, 255, 0.1);
+  text-decoration: none;
+}
+
+/* Main content area */
+.main-content {
+  margin-left: 250px;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+/* Top navigation */
+.topbar {
+  height: 60px;
+}
+
+.topbar-divider {
+  width: 1px;
+  height: 40px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Project cards */
+.project-card {
+  transition: transform 0.2s;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.progress-sm {
+  height: 6px;
+}
+
+/* Badge adjustments */
+.badge {
+  font-weight: 500;
+  padding: 4px 8px;
+}
+
+/* Button styles */
+.btn-primary {
+  background-color: #4e73df;
+  border-color: #4e73df;
+}
+
+.btn-primary:hover {
+  background-color: #3a5ec0;
+  border-color: #3a5ec0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sidebar {
+    margin-left: -250px;
+  }
+  
+  .main-content {
+    margin-left: 0;
+  }
+  
+  .topbar {
+    padding-left: 0;
+  }
+}

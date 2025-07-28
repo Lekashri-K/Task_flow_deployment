@@ -1,3 +1,4 @@
+// src/App.js
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import PrivateRoute from './components/PrivateRoute';
@@ -6,7 +7,11 @@ import ManagerDashboard from './pages/ManagerDashboard';
 import EmployeeDashboard from './pages/EmployeeDashboard';
 import Unauthorized from './pages/Unauthorized';
 import UserManagement from './pages/UserManagement';
-import AddUser from './pages/AddUser';  // Import the AddUser component
+import AddUser from './pages/AddUser';
+import ProjectsPage from './pages/ProjectsPage'; // Add this import
+import ProjectDetailsPage from './pages/ProjectDetailsPage';
+import TasksPage from './pages/TasksPage';
+import Reports from './pages/Reports';
 
 function App() {
   return (
@@ -27,6 +32,15 @@ function App() {
 
       <Route element={<PrivateRoute allowedRoles={['employee']} />}>
         <Route path="/employee/*" element={<EmployeeDashboard />} />
+      </Route>
+      
+      <Route element={<PrivateRoute allowedRoles={['supermanager', 'manager']} />}>
+        <Route path="/projects" element={<ProjectsPage />} />
+        <Route path="/projects/create" element={<div>Create Project Form</div>} />
+        <Route path="/projects/:id" element={<ProjectDetailsPage />} />
+        <Route path="/tasks" element={<TasksPage />} />
+        <Route path="/reports" element={<Reports />} />
+        
       </Route>
 
       <Route path="/" element={<Navigate to="/login" replace />} />

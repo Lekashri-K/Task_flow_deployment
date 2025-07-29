@@ -5,6 +5,50 @@ from django.contrib.auth.hashers import make_password
 from rest_framework.fields import DateField, DateTimeField
 from .models import CustomUser, Project, Task, Activity  
 
+# class UserSerializer(serializers.ModelSerializer):
+#     password = serializers.CharField(write_only=True, required=False)
+#     date_joined = DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
+#     confirmPassword = serializers.CharField(write_only=True, required=False)
+
+#     class Meta:
+#         model = CustomUser
+#         fields = [
+#             'id', 'username', 'email', 'full_name', 'role', 
+#             'password', 'confirmPassword', 'is_active', 'date_joined'
+#         ]
+#         extra_kwargs = {
+#             'username': {'required': True},
+#             'email': {'required': True},
+#         }
+
+#     def validate(self, data):
+#         if 'password' in data:
+#             if len(data['password']) < 8:
+#                 raise serializers.ValidationError({"password": "Password must be at least 8 characters"})
+#                 if data.get('password') != data.get('confirmPassword'):
+#                     raise serializers.ValidationError({"password": "Password fields didn't match."})
+#         return data
+
+#     def create(self, validated_data):
+#         password = validated_data.pop('password')
+#         validated_data.pop('confirmPassword', None)
+#         user = CustomUser(**validated_data)
+#         user.set_password(password)
+#         user.save()
+#         return user
+
+#     def update(self, instance, validated_data):
+#         validated_data.pop('confirmPassword', None)
+#         password = validated_data.pop('password', None)
+        
+#         if password:
+#             instance.set_password(password)
+        
+#         for attr, value in validated_data.items():
+#             setattr(instance, attr, value)
+        
+#         instance.save()
+#         return instance
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False)
     date_joined = DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
@@ -21,25 +65,12 @@ class UserSerializer(serializers.ModelSerializer):
             'email': {'required': True},
         }
 
-    # def validate(self, data):
-    #     if 'password' in data:
-    #         if data.get('password') != data.get('confirmPassword'):
-    #             raise serializers.ValidationError({"password": "Password fields didn't match."})
-    #     return data
-
-    # def create(self, validated_data):
-    #     validated_data.pop('confirmPassword', None)
-    #     password = validated_data.pop('password')
-    #     user = CustomUser(**validated_data)
-    #     user.set_password(password)
-    #     user.save()
-    #     return user
     def validate(self, data):
         if 'password' in data:
             if len(data['password']) < 8:
                 raise serializers.ValidationError({"password": "Password must be at least 8 characters"})
-                if data.get('password') != data.get('confirmPassword'):
-                    raise serializers.ValidationError({"password": "Password fields didn't match."})
+            if data.get('password') != data.get('confirmPassword'):
+                raise serializers.ValidationError({"password": "Password fields didn't match."})
         return data
 
     def create(self, validated_data):
@@ -103,40 +134,6 @@ class ProjectSerializer(serializers.ModelSerializer):
         return value
 
 
-
-# class TaskSerializer(serializers.ModelSerializer):
-#     assigned_to = serializers.PrimaryKeyRelatedField(
-#         queryset=CustomUser.objects.filter(role='employee'),
-#         required=True  # Make sure this field is required
-#     )
-#     assigned_by = serializers.StringRelatedField(read_only=True)
-#     created_at = DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
-#     due_date = DateField(format="%Y-%m-%d", required=False, allow_null=True)
-#     is_overdue = serializers.BooleanField(read_only=True)
-#     display_status = serializers.SerializerMethodField()
-
-#     def create(self, validated_data):
-#         # Automatically set assigned_by to current user
-#         validated_data['assigned_by'] = self.context['request'].user
-#         return super().create(validated_data)
-
-#     def validate(self, data):
-#         if 'assigned_to' in data and data['assigned_to']:
-#             if data['assigned_to'].role != 'employee':
-#                 raise serializers.ValidationError(
-#                     {"assigned_to": "Must assign to an employee"}
-#                 )
-#         return data
-
-#     class Meta:
-#         model = Task
-#         fields = '__all__'
-#         read_only_fields = ('assigned_by', 'created_at', 'is_overdue')
-
-#     def get_display_status(self, obj):
-#         if obj.is_overdue:
-#             return "Overdue"
-#         return obj.get_status_display()
 class TaskSerializer(serializers.ModelSerializer):
     assigned_to = serializers.PrimaryKeyRelatedField(
         queryset=CustomUser.objects.filter(role='employee'),
@@ -147,8 +144,9 @@ class TaskSerializer(serializers.ModelSerializer):
     due_date = DateField(format="%Y-%m-%d", required=False, allow_null=True)
     is_overdue = serializers.BooleanField(read_only=True)
     display_status = serializers.SerializerMethodField()
-    assigned_to_details = serializers.SerializerMethodField()  # Add this line
-
+    assigned_to_details = serializers.SerializerMethodField()
+    assigned_by_details = serializers.SerializerMethodField()
+    project_name = serializers.CharField(source='project.name', read_only=True)  
     def create(self, validated_data):
         validated_data['assigned_by'] = self.context['request'].user
         return super().create(validated_data)
@@ -171,16 +169,24 @@ class TaskSerializer(serializers.ModelSerializer):
             return "Overdue"
         return obj.get_status_display()
 
-    # Add this method to get assignee details
     def get_assigned_to_details(self, obj):
         if obj.assigned_to:
             return {
                 'id': obj.assigned_to.id,
                 'username': obj.assigned_to.username,
-                'full_name': obj.assigned_to.full_name
+                'full_name': obj.assigned_to.full_name,
+                'email': obj.assigned_to.email
             }
         return None
 
+    def get_assigned_by_details(self, obj):
+        if obj.assigned_by:
+            return {
+                'id': obj.assigned_by.id,
+                'username': obj.assigned_by.username,
+                'full_name': obj.assigned_by.full_name
+            }
+        return None
 class RecentActivitySerializer(serializers.Serializer):
     id = serializers.IntegerField()
     type = serializers.CharField()
@@ -202,3 +208,23 @@ class ActivitySerializer(serializers.ModelSerializer):
 
 
 
+class ManagerProjectSerializer(serializers.ModelSerializer):
+    progress = serializers.SerializerMethodField()
+    total_tasks = serializers.SerializerMethodField()
+    completed_tasks = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Project
+        fields = ['id', 'name', 'description', 'deadline', 'progress', 'total_tasks', 'completed_tasks']
+
+    def get_progress(self, obj):
+        tasks = obj.tasks.all()
+        total = tasks.count()
+        completed = tasks.filter(status='completed').count()
+        return round((completed / total) * 100) if total > 0 else 0
+
+    def get_total_tasks(self, obj):
+        return obj.tasks.count()
+
+    def get_completed_tasks(self, obj):
+        return obj.tasks.filter(status='completed').count()

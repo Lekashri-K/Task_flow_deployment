@@ -45,11 +45,11 @@
 //     try {
 //       const refreshToken = localStorage.getItem('refresh_token');
 //       if (!refreshToken) throw new Error('No refresh token available');
-      
+
 //       const response = await api.post('token/refresh/', {
 //         refresh: refreshToken
 //       });
-      
+
 //       localStorage.setItem('access_token', response.data.access);
 //       return response.data.access;
 //     } catch (error) {
@@ -305,11 +305,11 @@
 //     }
 
 //     const originalRequest = error.config;
-    
+
 //     // If unauthorized and not already retried
 //     if (error.response?.status === 401 && !originalRequest._retry) {
 //       originalRequest._retry = true;
-      
+
 //       try {
 //         const newToken = await authApi.refreshToken();
 //         api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
@@ -322,7 +322,7 @@
 //         return Promise.reject(refreshError);
 //       }
 //     }
-    
+
 //     // For other errors, just reject
 //     return Promise.reject(error);
 //   }
@@ -377,11 +377,11 @@ const authApi = {
     try {
       const refreshToken = localStorage.getItem('refresh_token');
       if (!refreshToken) throw new Error('No refresh token available');
-      
+
       const response = await api.post('token/refresh/', {
         refresh: refreshToken
       });
-      
+
       localStorage.setItem('access_token', response.data.access);
       return response.data.access;
     } catch (error) {
@@ -637,11 +637,11 @@ api.interceptors.response.use(
     }
 
     const originalRequest = error.config;
-    
+
     // If unauthorized and not already retried
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      
+
       try {
         const newToken = await authApi.refreshToken();
         api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
@@ -654,11 +654,157 @@ api.interceptors.response.use(
         return Promise.reject(refreshError);
       }
     }
-    
+
     // For other errors, just reject
     return Promise.reject(error);
   }
 );
+// api.js
+// Ensure your managerApi in api.js has all these endpoints
+const managerApi = {
+  getDashboardStats: async () => {
+    try {
+      const response = await api.get('manager-dashboard-stats/');
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch manager dashboard stats:', error);
+      throw error;
+    }
+  },
 
-export { authApi, superManagerApi };
+  getProjects: async () => {
+    try {
+      const response = await api.get('manager/projects/');
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch manager projects:', error);
+      throw error;
+    }
+  },
+
+  getProject: async (projectId) => {
+    try {
+      const response = await api.get(`manager/projects/${projectId}/`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch project:', error);
+      throw error;
+    }
+  },
+
+  getTasksByProject: async (projectId) => {
+    try {
+      const response = await api.get(`manager/tasks/?project=${projectId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch project tasks:', error);
+      throw error;
+    }
+  },
+
+  getEmployees: async () => {
+    try {
+      const response = await api.get('manager/employees/');
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch employees:', error);
+      throw error;
+    }
+  },
+
+  createTask: async (taskData) => {
+    try {
+      const response = await api.post('manager/tasks/', taskData);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to create task:', error.response?.data);
+      throw error;
+    }
+  },
+
+  updateTask: async (taskId, taskData) => {
+    try {
+      const response = await api.patch(`manager/tasks/${taskId}/`, taskData);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to update task:', error.response?.data);
+      throw error;
+    }
+  },
+
+  deleteTask: async (taskId) => {
+    try {
+      const response = await api.delete(`manager/tasks/${taskId}/`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to delete task:', error.response?.data);
+      throw error;
+    }
+  }
+};
+
+// Add to api.js
+const employeeApi = {
+  // Add these to your employeeApi methods
+  createSelfTask: async (taskData) => {
+    const response = await api.post('/tasks/self', taskData);
+    return response.data;
+  },
+
+  getSelfTasks: async () => {
+    const response = await api.get('/tasks/self');
+    return response.data;
+  },
+
+  updateSelfTaskStatus: async (taskId, status) => {
+    const response = await api.patch(`/tasks/self/${taskId}`, { status });
+    return response.data;
+  },
+  getTasks: async () => {
+    try {
+      const response = await api.get('employee/tasks/');
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch employee tasks:', error);
+      throw error;
+    }
+  },
+
+  updateTaskStatus: async (taskId, status, notes) => {
+    try {
+      const response = await api.patch(`employee/tasks/${taskId}/`, {
+        status,
+        notes
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Failed to update task status:', error.response?.data);
+      throw error;
+    }
+  },
+
+  createTask: async (taskData) => {
+    try {
+      const response = await api.post('employee/tasks/', taskData);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to create task:', error.response?.data);
+      throw error;
+    }
+  },
+
+  deleteTask: async (taskId) => {
+    try {
+      const response = await api.delete(`employee/tasks/${taskId}/`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to delete task:', error.response?.data);
+      throw error;
+    }
+  }
+};
+
+// Add to exports
+export { authApi, managerApi, superManagerApi, employeeApi };
+
 export default api;

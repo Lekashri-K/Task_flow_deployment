@@ -100,15 +100,34 @@ const SuperManagerDashboard = () => {
           <div className="header d-flex justify-content-between align-items-center py-3">
             <h4 className="mb-0">Dashboard Overview</h4>
             <div className="dropdown">
-              <a href="#" className="d-flex align-items-center text-decoration-none dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown">
-                <i className="bi bi-person-circle user-avatar me-2 fs-2"></i>
+              <a
+                href="#"
+                className="d-flex align-items-center text-decoration-none dropdown-toggle"
+                id="userDropdown"
+                data-bs-toggle="dropdown"
+                style={{
+                  color: '#0d6efd',
+                  padding: '0.5rem 1rem'
+                }}
+              >
+                <i className="bi bi-person-circle me-1 fs-4"></i>
                 <span className="d-none d-md-inline">{user.full_name || 'Super Manager'}</span>
               </a>
               <ul className="dropdown-menu dropdown-menu-end">
-                <li><Link className="dropdown-item" to="/profile"><i className="bi bi-person me-2"></i>Profile</Link></li>
-                <li><Link className="dropdown-item" to="/settings"><i className="bi bi-gear me-2"></i>Settings</Link></li>
+                <li className="dropdown-item disabled">
+                  <small className="text-muted">Signed in as Super Manager</small>
+                </li>
                 <li><hr className="dropdown-divider" /></li>
-                <li><button className="dropdown-item" onClick={handleLogout}><i className="bi bi-box-arrow-right me-2"></i>Logout</button></li>
+                <li>
+                  <button 
+                    className="dropdown-item d-flex align-items-center"
+                    onClick={handleLogout}
+                    style={{ color: '#0d6efd',color:'white' }}
+                  >
+                    <i className="bi bi-box-arrow-right me-2"></i>
+                    Logout
+                  </button>
+                </li>
               </ul>
             </div>
           </div>
@@ -120,7 +139,6 @@ const SuperManagerDashboard = () => {
               <div className="card h-100">
                 <div className="card-header d-flex justify-content-between align-items-center">
                   <h6 className="mb-0">Recent Activity</h6>
-                  <Link to="/activity" className="small">View All</Link>
                 </div>
                 <div className="card-body" style={{ maxHeight: '400px', overflowY: 'auto' }}>
                   {loading.activities ? (

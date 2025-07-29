@@ -14,6 +14,7 @@ from django.db.models.functions import Coalesce
 from .models import CustomUser, Project, Task
 from .serializers import UserSerializer, ProjectSerializer, TaskSerializer
 from django.db.models.functions import TruncDate
+from rest_framework import generics  # Add this import
 class SuperManagerDashboardStats(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -274,3 +275,91 @@ class ReportView(APIView):
         }
         
         return Response(response_data)
+class ManagerProjectViewSet(viewsets.ModelViewSet):
+    serializer_class = ProjectSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if self.request.user.role == 'manager':
+            return Project.objects.filter(assigned_to=self.request.user)
+        return Project.objects.none()
+# In views.py
+class ManagerTaskViewSet(viewsets.ModelViewSet):
+    serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if self.request.user.role == 'manager':
+            project_id = self.request.query_params.get('project')
+            
+            # If project ID is provided, verify it belongs to this manager
+            if project_id:
+                if not Project.objects.filter(
+                    id=project_id, 
+                    assigned_to=self.request.user
+                ).exists():
+                    return Task.objects.none()
+                return Task.objects.filter(project_id=project_id)
+            
+            # If no project specified, return all tasks for manager's projects
+            manager_projects = Project.objects.filter(assigned_to=self.request.user)
+            return Task.objects.filter(project__in=manager_projects)
+        return Task.objects.none()
+# class ManagerTaskViewSet(viewsets.ModelViewSet):
+#     serializer_class = TaskSerializer
+#     permission_classes = [IsAuthenticated]
+
+#     def get_queryset(self):
+#         if self.request.user.role == 'manager':
+#             # Get tasks from projects assigned to this manager
+#             manager_projects = Project.objects.filter(assigned_to=self.request.user)
+#             return Task.objects.filter(project__in=manager_projects)
+#         return Task.objects.none()
+
+#     def perform_create(self, serializer):
+#         serializer.save(assigned_by=self.request.user)
+
+class ManagerEmployeeListView(generics.ListAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if self.request.user.role == 'manager':
+            return CustomUser.objects.filter(role='employee')
+        return CustomUser.objects.none()
+class ManagerDashboardStats(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if request.user.role != 'manager':
+            return Response({'error': 'Unauthorized'}, status=403)
+
+        projects = Project.objects.filter(assigned_to=request.user)
+        project_ids = projects.values_list('id', flat=True)
+        tasks = Task.objects.filter(project__in=project_ids)
+
+        stats = {
+            'total_projects': projects.count(),
+            'active_projects': projects.filter(deadline__gte=timezone.now()).count(),
+            'pending_tasks': tasks.filter(status='pending').count(),
+            'in_progress_tasks': tasks.filter(status='in_progress').count(),
+            'completed_tasks': tasks.filter(status='completed').count(),
+            'overdue_tasks': tasks.filter(
+                Q(due_date__lt=timezone.now().date()) & ~Q(status='completed')
+            ).count()
+        }
+
+        return Response(stats)
+# views.py
+class EmployeeTaskViewSet(viewsets.ModelViewSet):
+    serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if self.request.user.role == 'employee':
+            return Task.objects.filter(assigned_to=self.request.user)
+        return Task.objects.none()
+
+    def perform_create(self, serializer):
+        # Employees shouldn't be able to assign tasks to others
+        serializer.save(assigned_to=self.request.user)

@@ -80,15 +80,15 @@ const UserManagement = () => {
   };
 
   const filteredUsers = users.filter(user => {
-    const matchesSearch = 
+    const matchesSearch =
       user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (user.full_name && user.full_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesRole = 
-      roleFilter === 'all' || 
+
+    const matchesRole =
+      roleFilter === 'all' ||
       user.role?.toLowerCase() === roleFilter.toLowerCase();
-    
+
     return matchesSearch && matchesRole;
   });
 
@@ -101,7 +101,7 @@ const UserManagement = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const getRoleBadgeClass = (role) => {
-    switch((role || '').toLowerCase()) {
+    switch ((role || '').toLowerCase()) {
       case 'supermanager': return 'bg-danger';
       case 'manager': return 'bg-warning text-dark';
       case 'employee': return 'bg-primary';
@@ -134,7 +134,7 @@ const UserManagement = () => {
   return (
     <div className="container-fluid">
       <div className="row">
-         <Sidebar />
+        <Sidebar />
 
         <div className="col-md-10 main-content">
           <div className="header d-flex justify-content-between align-items-center">
@@ -142,14 +142,24 @@ const UserManagement = () => {
             <div className="d-flex align-items-center">
               <div className="dropdown">
                 <a href="#" className="d-flex align-items-center text-decoration-none dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown">
-                  <i className="bi bi-person-circle user-avatar me-2 fs-2"></i>
+                  <i className="bi bi-person-circle me-1 fs-4"></i>
                   <span className="d-none d-md-inline">{user.full_name || 'Super Manager'}</span>
                 </a>
                 <ul className="dropdown-menu dropdown-menu-end">
-                  <li><Link className="dropdown-item" to="/profile"><i className="bi bi-person me-2"></i>Profile</Link></li>
-                  <li><Link className="dropdown-item" to="/settings"><i className="bi bi-gear me-2"></i>Settings</Link></li>
+                  <li className="dropdown-item disabled">
+                    <small className="text-muted">Signed in as Super Manager</small>
+                  </li>
                   <li><hr className="dropdown-divider" /></li>
-                  <li><button className="dropdown-item" onClick={handleLogout}><i className="bi bi-box-arrow-right me-2"></i>Logout</button></li>
+                  <li>
+                    <button
+                      className="dropdown-item d-flex align-items-center"
+                      onClick={handleLogout}
+                      style={{ color: '#0d6efd', color: 'white' }}
+                    >
+                      <i className="bi bi-box-arrow-right me-2"></i>
+                      Logout
+                    </button>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -218,7 +228,7 @@ const UserManagement = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="card-body p-0">
               <div className="table-responsive">
                 <table className="table table-hover mb-0">
@@ -263,14 +273,14 @@ const UserManagement = () => {
                           </td>
                           <td>
                             <div className="d-flex">
-                              <Link 
-                                to={`/supermanager/users/edit/${user.id}`} 
+                              <Link
+                                to={`/supermanager/users/edit/${user.id}`}
                                 className="btn btn-sm btn-outline-primary me-2"
                                 title="Edit"
                               >
                                 <i className="bi bi-pencil"></i>
                               </Link>
-                              <button 
+                              <button
                                 className="btn btn-sm btn-danger"  // Changed to btn-danger for red color
                                 onClick={() => handleDeleteUser(user.id)}
                                 title="Delete"
@@ -292,7 +302,7 @@ const UserManagement = () => {
                 </table>
               </div>
             </div>
-            
+
             <div className="card-footer bg-white">
               <div className="d-flex flex-column flex-md-row justify-content-between align-items-center">
                 <div className="text-muted small mb-2 mb-md-0">
@@ -301,7 +311,7 @@ const UserManagement = () => {
                 <nav>
                   <ul className="pagination pagination-sm mb-0">
                     <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                      <button 
+                      <button
                         className="page-link text-dark"  // Changed text color
                         onClick={() => paginate(currentPage - 1)}
                         disabled={currentPage === 1}
@@ -309,20 +319,20 @@ const UserManagement = () => {
                         <i className="bi bi-chevron-left"></i>
                       </button>
                     </li>
-                    
+
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map(number => (
                       <li key={number} className={`page-item ${currentPage === number ? 'active' : ''}`}>
-                        <button 
-                          onClick={() => paginate(number)} 
+                        <button
+                          onClick={() => paginate(number)}
                           className="page-link text-dark"  // Changed text color
                         >
                           {number}
                         </button>
                       </li>
                     ))}
-                    
+
                     <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                      <button 
+                      <button
                         className="page-link text-dark"  // Changed text color
                         onClick={() => paginate(currentPage + 1)}
                         disabled={currentPage === totalPages}

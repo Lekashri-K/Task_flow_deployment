@@ -4,12 +4,16 @@ import { superManagerApi } from '../api/api';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-const QuickActions = ({ refreshTasks, refreshProjects, refreshUsers }) => {
+const QuickActions = ({ refreshTasks = () => {}, refreshProjects = () => {}, refreshUsers = () => {} }) => {
     const { user } = useAuth();
     const navigate = useNavigate();
 
-    // Task Modal State
+    // Modal visibility states
     const [showTaskModal, setShowTaskModal] = useState(false);
+    const [showProjectModal, setShowProjectModal] = useState(false);
+    const [showUserModal, setShowUserModal] = useState(false);
+
+    // Form data states
     const [taskData, setTaskData] = useState({
         title: '',
         description: '',
@@ -19,8 +23,6 @@ const QuickActions = ({ refreshTasks, refreshProjects, refreshUsers }) => {
         status: 'pending'
     });
 
-    // Project Modal State
-    const [showProjectModal, setShowProjectModal] = useState(false);
     const [projectData, setProjectData] = useState({
         name: '',
         description: '',
@@ -28,21 +30,22 @@ const QuickActions = ({ refreshTasks, refreshProjects, refreshUsers }) => {
         deadline: ''
     });
 
-    // User Modal State
-    const [showUserModal, setShowUserModal] = useState(false);
     const [userData, setUserData] = useState({
         username: '',
         email: '',
         full_name: '',
         role: 'employee',
-        password: ''
+        password: '',
+        confirmPassword: ''
     });
 
-    // Shared State
+    // Data and UI states
     const [projects, setProjects] = useState([]);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [activeModal, setActiveModal] = useState(null);
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
 
     const fetchProjectsAndUsers = async () => {
         try {
@@ -54,24 +57,27 @@ const QuickActions = ({ refreshTasks, refreshProjects, refreshUsers }) => {
             setUsers(usersRes);
         } catch (error) {
             console.error('Failed to fetch data:', error);
+            setError('Failed to load required data. Please try again.');
         }
     };
 
     const handleShowModal = (modalType) => {
         setActiveModal(modalType);
+        setError(null);
+        setSuccess(null);
         fetchProjectsAndUsers();
+        
+        // Reset all modals first
+        setShowTaskModal(false);
+        setShowProjectModal(false);
+        setShowUserModal(false);
+        
+        // Then show the requested modal
         switch (modalType) {
-            case 'task':
-                setShowTaskModal(true);
-                break;
-            case 'project':
-                setShowProjectModal(true);
-                break;
-            case 'user':
-                setShowUserModal(true);
-                break;
-            default:
-                break;
+            case 'task': setShowTaskModal(true); break;
+            case 'project': setShowProjectModal(true); break;
+            case 'user': setShowUserModal(true); break;
+            default: break;
         }
     };
 
@@ -87,14 +93,16 @@ const QuickActions = ({ refreshTasks, refreshProjects, refreshUsers }) => {
             case 'user':
                 setUserData(prev => ({ ...prev, [name]: value }));
                 break;
-            default:
-                break;
+            default: break;
         }
     };
 
     const handleTaskSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        setError(null);
+        setSuccess(null);
+        
         try {
             const formattedData = {
                 ...taskData,
@@ -103,19 +111,30 @@ const QuickActions = ({ refreshTasks, refreshProjects, refreshUsers }) => {
                 due_date: taskData.due_date || null
             };
 
-            await superManagerApi.createTask(formattedData);
-            setShowTaskModal(false);
-            refreshTasks();
-            setTaskData({
-                title: '',
-                description: '',
-                project: '',
-                assigned_to: '',
-                due_date: '',
-                status: 'pending'
-            });
+            const response = await superManagerApi.createTask(formattedData);
+            
+            if (response && (response.id || response.success)) {
+                setSuccess('Task created successfully!');
+                setTimeout(() => {
+                    setShowTaskModal(false);
+                    if (typeof refreshTasks === 'function') {
+                        refreshTasks();
+                    }
+                    setTaskData({
+                        title: '',
+                        description: '',
+                        project: '',
+                        assigned_to: '',
+                        due_date: '',
+                        status: 'pending'
+                    });
+                }, 1000);
+            } else {
+                throw new Error('Received invalid response from server');
+            }
         } catch (error) {
-            console.error('Task creation failed:', error.response?.data);
+            console.error('Task creation failed:', error.response?.data || error.message);
+            setError(error.response?.data?.message || 'Failed to create task. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -124,8 +143,10 @@ const QuickActions = ({ refreshTasks, refreshProjects, refreshUsers }) => {
     const handleProjectSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        setError(null);
+        setSuccess(null);
+        
         try {
-            // Format data for backend
             const formattedData = {
                 name: projectData.name.trim(),
                 description: projectData.description.trim(),
@@ -133,30 +154,28 @@ const QuickActions = ({ refreshTasks, refreshProjects, refreshUsers }) => {
                 deadline: projectData.deadline || null,
             };
 
-            console.log('Sending project data:', formattedData); // Debug log
-
             const response = await superManagerApi.createProject(formattedData);
-            console.log('Backend response:', response); // Debug log
 
-            if (response && response.id) {
-                setShowProjectModal(false);
-                refreshProjects();
-                setProjectData({
-                    name: '',
-                    description: '',
-                    assigned_to: '',
-                    deadline: ''
-                });
+            if (response && (response.id || response.success)) {
+                setSuccess('Project created successfully!');
+                setTimeout(() => {
+                    setShowProjectModal(false);
+                    if (typeof refreshProjects === 'function') {
+                        refreshProjects();
+                    }
+                    setProjectData({
+                        name: '',
+                        description: '',
+                        assigned_to: '',
+                        deadline: ''
+                    });
+                }, 1000);
             } else {
-                throw new Error('Invalid response from server');
+                throw new Error('Received invalid response from server');
             }
         } catch (error) {
-            console.error('Project creation error:', {
-                error: error.message,
-                response: error.response?.data,
-                status: error.response?.status
-            });
-            alert(`Failed to create project: ${error.response?.data?.message || error.message}`);
+            console.error('Project creation error:', error.response?.data || error.message);
+            setError(error.response?.data?.message || 'Failed to create project. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -165,19 +184,56 @@ const QuickActions = ({ refreshTasks, refreshProjects, refreshUsers }) => {
     const handleUserSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        setError(null);
+        setSuccess(null);
+        
         try {
-            await superManagerApi.createUser(userData);
-            setShowUserModal(false);
-            refreshUsers();
-            setUserData({
-                username: '',
-                email: '',
-                full_name: '',
-                role: 'employee',
-                password: ''
+            // Client-side validation
+            if (userData.password !== userData.confirmPassword) {
+                throw new Error("Passwords don't match");
+            }
+
+            if (userData.password.length < 8) {
+                throw new Error("Password must be at least 8 characters");
+            }
+
+            const response = await superManagerApi.createUser({
+                username: userData.username,
+                email: userData.email,
+                full_name: userData.full_name,
+                role: userData.role,
+                password: userData.password,
+                confirmPassword: userData.password
             });
+
+            if (response && (response.id || response.success)) {
+                setSuccess('User created successfully!');
+                setTimeout(() => {
+                    setShowUserModal(false);
+                    if (typeof refreshUsers === 'function') {
+                        refreshUsers();
+                    }
+                    setUserData({
+                        username: '',
+                        email: '',
+                        full_name: '',
+                        role: 'employee',
+                        password: '',
+                        confirmPassword: ''
+                    });
+                }, 1000);
+            } else {
+                throw new Error('Received invalid response from server');
+            }
         } catch (error) {
-            console.error('User creation failed:', error.response?.data);
+            console.error('User creation failed:', error.response?.data || error.message);
+            setError(
+                error.response?.data?.password || 
+                error.response?.data?.username || 
+                error.response?.data?.email || 
+                error.message ||
+                'Failed to create user. Please try again.'
+            );
         } finally {
             setLoading(false);
         }
@@ -185,6 +241,14 @@ const QuickActions = ({ refreshTasks, refreshProjects, refreshUsers }) => {
 
     const handleGenerateReport = () => {
         navigate('/reports');
+    };
+
+    const handleCloseModal = () => {
+        setShowTaskModal(false);
+        setShowProjectModal(false);
+        setShowUserModal(false);
+        setError(null);
+        setSuccess(null);
     };
 
     return (
@@ -232,12 +296,15 @@ const QuickActions = ({ refreshTasks, refreshProjects, refreshUsers }) => {
             </div>
 
             {/* Task Modal */}
-            <Modal show={showTaskModal} onHide={() => setShowTaskModal(false)}>
+            <Modal show={showTaskModal} onHide={handleCloseModal}>
                 <Modal.Header closeButton>
                     <Modal.Title>Create New Task</Modal.Title>
                 </Modal.Header>
                 <Form onSubmit={handleTaskSubmit}>
                     <Modal.Body>
+                        {error && <div className="alert alert-danger">{error}</div>}
+                        {success && <div className="alert alert-success">{success}</div>}
+                        
                         <Form.Group className="mb-3">
                             <Form.Label>Task Title *</Form.Label>
                             <Form.Control
@@ -319,23 +386,31 @@ const QuickActions = ({ refreshTasks, refreshProjects, refreshUsers }) => {
                         </Form.Group>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={() => setShowTaskModal(false)}>
+                        <Button variant="secondary" onClick={handleCloseModal} disabled={loading}>
                             Cancel
                         </Button>
                         <Button variant="primary" type="submit" disabled={loading}>
-                            {loading ? 'Creating...' : 'Create Task'}
+                            {loading ? (
+                                <>
+                                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                    Creating...
+                                </>
+                            ) : 'Create Task'}
                         </Button>
                     </Modal.Footer>
                 </Form>
             </Modal>
 
             {/* Project Modal */}
-            <Modal show={showProjectModal} onHide={() => setShowProjectModal(false)}>
+            <Modal show={showProjectModal} onHide={handleCloseModal}>
                 <Modal.Header closeButton>
                     <Modal.Title>Create New Project</Modal.Title>
                 </Modal.Header>
                 <Form onSubmit={handleProjectSubmit}>
                     <Modal.Body>
+                        {error && <div className="alert alert-danger">{error}</div>}
+                        {success && <div className="alert alert-success">{success}</div>}
+                        
                         <Form.Group className="mb-3">
                             <Form.Label>Project Name *</Form.Label>
                             <Form.Control
@@ -388,23 +463,31 @@ const QuickActions = ({ refreshTasks, refreshProjects, refreshUsers }) => {
                         </Form.Group>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={() => setShowProjectModal(false)}>
+                        <Button variant="secondary" onClick={handleCloseModal} disabled={loading}>
                             Cancel
                         </Button>
                         <Button variant="primary" type="submit" disabled={loading}>
-                            {loading ? 'Creating...' : 'Create Project'}
+                            {loading ? (
+                                <>
+                                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                    Creating...
+                                </>
+                            ) : 'Create Project'}
                         </Button>
                     </Modal.Footer>
                 </Form>
             </Modal>
 
             {/* User Modal */}
-            <Modal show={showUserModal} onHide={() => setShowUserModal(false)}>
+            <Modal show={showUserModal} onHide={handleCloseModal}>
                 <Modal.Header closeButton>
                     <Modal.Title>Create New User</Modal.Title>
                 </Modal.Header>
                 <Form onSubmit={handleUserSubmit}>
                     <Modal.Body>
+                        {error && <div className="alert alert-danger">{error}</div>}
+                        {success && <div className="alert alert-success">{success}</div>}
+                        
                         <Form.Group className="mb-3">
                             <Form.Label>Username *</Form.Label>
                             <Form.Control
@@ -448,6 +531,7 @@ const QuickActions = ({ refreshTasks, refreshProjects, refreshUsers }) => {
                             >
                                 <option value="employee">Employee</option>
                                 <option value="manager">Manager</option>
+                                <option value="supermanager">Super Manager</option>
                             </Form.Select>
                         </Form.Group>
 
@@ -459,15 +543,34 @@ const QuickActions = ({ refreshTasks, refreshProjects, refreshUsers }) => {
                                 value={userData.password}
                                 onChange={(e) => handleInputChange(e, 'user')}
                                 required
+                                minLength={8}
+                            />
+                            <Form.Text>Minimum 8 characters</Form.Text>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3">
+                            <Form.Label>Confirm Password *</Form.Label>
+                            <Form.Control
+                                type="password"
+                                name="confirmPassword"
+                                value={userData.confirmPassword}
+                                onChange={(e) => handleInputChange(e, 'user')}
+                                required
+                                minLength={8}
                             />
                         </Form.Group>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={() => setShowUserModal(false)}>
+                        <Button variant="secondary" onClick={handleCloseModal} disabled={loading}>
                             Cancel
                         </Button>
                         <Button variant="primary" type="submit" disabled={loading}>
-                            {loading ? 'Creating...' : 'Create User'}
+                            {loading ? (
+                                <>
+                                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                    Creating...
+                                </>
+                            ) : 'Create User'}
                         </Button>
                     </Modal.Footer>
                 </Form>

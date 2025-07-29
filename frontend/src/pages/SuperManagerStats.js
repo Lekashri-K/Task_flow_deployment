@@ -75,7 +75,7 @@ const SuperManagerStats = () => {
                   <i className="bi bi-people"></i>
                 </div>
               </div>
-              <h3 className="mb-1">{stats.total_users}</h3>
+              <h3 className="mb-1">{stats.total_users-1}</h3>
               <small className="text-muted">All registered users</small>
             </div>
           </div>

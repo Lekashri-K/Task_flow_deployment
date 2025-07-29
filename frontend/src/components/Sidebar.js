@@ -12,9 +12,9 @@ const Sidebar = () => {
   return (
     <div className="col-md-2 sidebar p-0">
       <div className="p-4 text-center">
-        <h4 className="text-primary fw-bold">TaskFlow</h4>
-        <p className="text-muted small">{user.role} Dashboard</p>
-      </div>
+  <h4 className="text-dark fw-bold">TaskFlow</h4>
+  <p className="text-muted small">{user.role} Dashboard</p>
+</div>
       <ul className="nav flex-column px-3">
         <li className="nav-item">
           <Link

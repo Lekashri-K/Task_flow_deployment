@@ -57,7 +57,7 @@ const ManagerSidebar = () => {
               to="/manager/tasks"
               style={navItemStyle(isActive('/manager/tasks'))}
             >
-              <BsClipboardCheck className="me-3" size={18} /> View Tasks
+              <BsClipboardCheck className="me-3" size={18} /> View Projects
             </Link>
           </li>
           <li className="nav-item">

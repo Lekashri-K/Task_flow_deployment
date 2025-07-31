@@ -78,7 +78,7 @@ import ManagerTasks from './pages/ManagerTasks';
 import CreateTask from './pages/CreateTask';
 import Home from './pages/home'; // Home page
 import { useAuth } from './context/AuthContext'; // Auth context
-
+import EmployeeTasks from './pages/EmployeeTasks';
 function App() {
   const { user } = useAuth();
 
@@ -99,15 +99,27 @@ function App() {
         <Route path="/supermanager/users/edit/:id" element={<AddUser />} />
       </Route>
 
-      <Route element={<PrivateRoute allowedRoles={['manager']} />}>
+      {/* <Route element={<PrivateRoute allowedRoles={['manager']} />}>
         <Route path="/manager/dashboard" element={<ManagerDashboard />} />
         <Route path="/manager/tasks" element={<ManagerTasks />} />
+        <Route path="/manager/createtask" element={<CreateTask />} />
+        <Route path="/manager" element={<Navigate to="/manager/dashboard" replace />} />
+      </Route> */}
+       <Route element={<PrivateRoute allowedRoles={['manager']} />}>
+        {/* Now renders ManagerTasks as dashboard */}
+        <Route path="/manager/dashboard" element={<ManagerTasks />} />
+
+        {/* Now renders ManagerDashboard as tasks */}
+        <Route path="/manager/tasks" element={<ManagerDashboard />} />
+
         <Route path="/manager/createtask" element={<CreateTask />} />
         <Route path="/manager" element={<Navigate to="/manager/dashboard" replace />} />
       </Route>
 
       <Route element={<PrivateRoute allowedRoles={['employee']} />}>
-        <Route path="/employee/*" element={<EmployeeDashboard />} />
+       <Route path="/employee/dashboard" element={<EmployeeDashboard />} />
+        <Route path="/employee/tasks" element={<EmployeeTasks />} />
+        <Route path="/employee" element={<Navigate to="/employee/dashboard" replace />} />
       </Route>
 
       <Route element={<PrivateRoute allowedRoles={['supermanager', 'manager']} />}>

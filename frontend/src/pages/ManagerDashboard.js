@@ -344,48 +344,63 @@ const ManagerDashboard = () => {
         minHeight: '100vh'
       }}>
         {/* Top Navigation Bar */}
-        <Navbar bg="white" expand="lg" className="shadow-sm">
-          <Container fluid>
-            <Navbar.Brand className="mb-0" style={{ fontSize: '1.5rem', fontWeight: '600' }}>
-              Task Management
-            </Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
-              <Nav>
-                <Dropdown align="end">
-                  <Dropdown.Toggle
-                    variant="link"
-                    id="dropdown-basic"
-                    className="d-flex align-items-center text-decoration-none"
-                    style={{
-                      background: 'transparent',
-                      border: 'none',
-                      color: '#0d6efd',
-                      padding: '0.5rem 1rem'
-                    }}
-                  >
-                    <BsPersonCircle className="me-1" size={20} />
-                    {currentUser?.full_name || currentUser?.username || 'User'}
-                  </Dropdown.Toggle>
-
-                  <Dropdown.Menu>
-                    <Dropdown.Item disabled>
-                      <small className="text-muted">Signed in as {currentUser?.role}</small>
-                    </Dropdown.Item>
-                    <Dropdown.Divider />
-                    <Dropdown.Item
-                      onClick={handleLogout}
-                      className="text-primary"
-                      style={{ background: 'transparent' }}
-                    >
-                      <BsBoxArrowRight className="me-2" /> Logout
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              </Nav>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
+        <Navbar
+                            bg="white"
+                            expand="lg"
+                            className="shadow-sm"
+                            style={{
+                                margin: '1rem 1rem 0rem 1rem', // top, right, bottom, left
+                                borderRadius: '0.75rem',
+                                padding: '0.5rem 1rem',
+                                border: '1px solid #dee2e6',
+                            }}
+                        >
+                            <Container fluid>
+                                <Navbar.Brand
+                                    className="mb-0"
+                                    style={{ fontSize: '1.5rem', fontWeight: '600' }}
+                                >
+                                    Project Management
+                                </Navbar.Brand>
+                                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                                <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
+                                    <Nav>
+                                        <Dropdown align="end">
+                                            <Dropdown.Toggle
+                                                variant="link"
+                                                id="dropdown-basic"
+                                                className="d-flex align-items-center text-decoration-none"
+                                                style={{
+                                                    background: 'transparent',
+                                                    border: 'none',
+                                                    color: '#0d6efd',
+                                                    padding: '0.5rem 1rem',
+                                                }}
+                                            >
+                                                <BsPersonCircle className="me-1" size={20} />
+                                                {currentUser?.full_name || currentUser?.username || 'User'}
+                                            </Dropdown.Toggle>
+        
+                                            <Dropdown.Menu>
+                                                <Dropdown.Item disabled>
+                                                    <small className="text-muted">
+                                                        Signed in as {currentUser?.role}
+                                                    </small>
+                                                </Dropdown.Item>
+                                                <Dropdown.Divider />
+                                                <Dropdown.Item
+                                                    onClick={handleLogout}
+                                                    className="text-primary"
+                                                    style={{ background: 'transparent' }}
+                                                >
+                                                    <BsBoxArrowRight className="me-2" /> Logout
+                                                </Dropdown.Item>
+                                            </Dropdown.Menu>
+                                        </Dropdown>
+                                    </Nav>
+                                </Navbar.Collapse>
+                            </Container>
+                        </Navbar>
 
         <div className="p-4">
           {error && (

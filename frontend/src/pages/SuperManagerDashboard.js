@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -28,10 +29,11 @@ const SuperManagerDashboard = () => {
     try {
       setLoading(prev => ({ ...prev, projects: true, users: true, activities: true }));
 
+      // Get top 5 recent activities from ALL users
       const [projects, users, activities] = await Promise.all([
         superManagerApi.getProjects(),
         superManagerApi.getUsers(),
-        superManagerApi.getRecentActivities()
+        superManagerApi.getRecentActivities(5) // Get only top 5
       ]);
 
       const processedUsers = users
@@ -49,7 +51,8 @@ const SuperManagerDashboard = () => {
           ...activity,
           timestamp: new Date(activity.timestamp)
         }))
-        .sort((a, b) => b.timestamp - a.timestamp);
+        .sort((a, b) => b.timestamp - a.timestamp)
+        .slice(0, 5); // Ensure only top 5
 
       setData({
         projects,
@@ -89,6 +92,34 @@ const SuperManagerDashboard = () => {
         default: return type === 'project' ? 'bg-info' : 'bg-secondary';
       }
     }
+    if (type === 'action') {
+      switch ((value || '').toLowerCase()) {
+        case 'created': return 'bg-success';
+        case 'updated': return 'bg-warning text-dark';
+        case 'deleted': return 'bg-danger';
+        default: return 'bg-secondary';
+      }
+    }
+  };
+
+  const getActivityIcon = (activity) => {
+    if (activity.type === 'user') return 'bi-person-plus';
+    if (activity.type === 'project') return 'bi-kanban';
+    if (activity.type === 'task') return 'bi-list-task';
+    return 'bi-activity';
+  };
+
+  const getActivityTitle = (activity) => {
+    if (activity.type === 'user') {
+      return `${activity.action === 'created' ? 'New User Created' : 'User Updated'}`;
+    }
+    if (activity.type === 'project') {
+      return `${activity.action === 'created' ? 'New Project Created' : 'Project Updated'}`;
+    }
+    if (activity.type === 'task') {
+      return `${activity.action === 'created' ? 'New Task Created' : 'Task Updated'}`;
+    }
+    return activity.title || 'Activity';
   };
 
   return (
@@ -138,7 +169,8 @@ const SuperManagerDashboard = () => {
             <div className="col-md-6">
               <div className="card h-100">
                 <div className="card-header d-flex justify-content-between align-items-center">
-                  <h6 className="mb-0">Recent Activity</h6>
+                  <h6 className="mb-0">Recent Activity (All Users)</h6>
+                  <small className="text-muted">Top 5 activities</small>
                 </div>
                 <div className="card-body" style={{ maxHeight: '400px', overflowY: 'auto' }}>
                   {loading.activities ? (
@@ -155,6 +187,8 @@ const SuperManagerDashboard = () => {
                         key={activity.id}
                         activity={activity}
                         getBadgeClass={getBadgeClass}
+                        getActivityIcon={getActivityIcon}
+                        getActivityTitle={getActivityTitle}
                       />
                     ))
                   )}
@@ -188,37 +222,65 @@ const SuperManagerDashboard = () => {
   );
 };
 
-// Helper components
-const ActivityItem = ({ activity, getBadgeClass }) => (
+// Updated ActivityItem component
+const ActivityItem = ({ activity, getBadgeClass, getActivityIcon, getActivityTitle }) => (
   <div className="activity-item mb-3 border-bottom pb-2">
     <div className="d-flex">
       <div className="me-3">
-        <i className={`bi ${activity.type === 'project' ? 'bi-kanban' : 'bi-list-task'} fs-4 text-primary`}></i>
+        <i className={`bi ${getActivityIcon(activity)} fs-4 text-primary`}></i>
       </div>
       <div className="flex-grow-1">
-        <div className="d-flex justify-content-between">
-          <strong>{activity.title}</strong>
+        <div className="d-flex justify-content-between align-items-start">
+          <strong>{getActivityTitle(activity)}</strong>
           <small className="text-muted">
             {formatDistanceToNow(activity.timestamp, { addSuffix: true })}
           </small>
         </div>
+        
         <div className="d-flex align-items-center mt-1 flex-wrap">
           <span className={`badge ${getBadgeClass('role', activity.user_role)} me-2 mb-1`}>
             {activity.user_role}
           </span>
-          <span className={`badge ${getBadgeClass('status', activity.status)} me-2 mb-1`}>
-            {activity.type === 'project' ? 'Project' : activity.status.replace('_', ' ')}
+          <span className={`badge ${getBadgeClass('action', activity.action)} me-2 mb-1`}>
+            {activity.action}
           </span>
           <small className="text-muted mb-1">
-            {activity.action === 'created' ? 'Created' : 'Updated'} by {activity.user}
+            by {activity.user}
           </small>
         </div>
+
         {activity.description && (
           <p className="mb-0 mt-2 text-muted small">
             {activity.description.length > 100
               ? `${activity.description.substring(0, 100)}...`
               : activity.description}
           </p>
+        )}
+
+        {/* Show specific details based on activity type */}
+        {activity.type === 'task' && activity.task_title && (
+          <div className="mt-1">
+            <small className="text-muted">
+              Task: <strong>{activity.task_title}</strong>
+              {activity.project_name && ` in ${activity.project_name}`}
+            </small>
+          </div>
+        )}
+
+        {activity.type === 'project' && activity.project_name && (
+          <div className="mt-1">
+            <small className="text-muted">
+              Project: <strong>{activity.project_name}</strong>
+            </small>
+          </div>
+        )}
+
+        {activity.type === 'user' && activity.target_user && (
+          <div className="mt-1">
+            <small className="text-muted">
+              User: <strong>{activity.target_user}</strong>
+            </small>
+          </div>
         )}
       </div>
     </div>

@@ -107,29 +107,7 @@ class SuperManagerProjectViewSet(viewsets.ModelViewSet):
             )
 
 
-# class SuperManagerTaskViewSet(viewsets.ModelViewSet):
-#     serializer_class = TaskSerializer
-#     permission_classes = [IsAuthenticated]
 
-#     def get_queryset(self):
-#         if self.request.user.role != 'supermanager':
-#             return Task.objects.none()
-            
-#         queryset = Task.objects.all().order_by('-created_at')
-        
-#         project_id = self.request.query_params.get('project')
-#         if project_id:
-#             queryset = queryset.filter(project_id=project_id)
-            
-#         return queryset
-
-#     def perform_create(self, serializer):
-#         serializer.save(assigned_by=self.request.user)
-
-#     def get_serializer_context(self):
-#         context = super().get_serializer_context()
-#         context['request'] = self.request
-#         return context
 class SuperManagerTaskViewSet(viewsets.ModelViewSet):
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
@@ -160,49 +138,101 @@ class RecentActivityView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        # Get tasks and projects that were updated or created recently
+        # Get limit parameter from request, default to 10
+        limit = int(request.GET.get('limit', 10))
+        
+        # Get tasks, projects, and users that were updated or created recently
         task_qs = Task.objects.filter(
-            Q(created_at__gte=now() - timedelta(days=30)) | Q(updated_at__gte=now() - timedelta(days=30))
+            Q(created_at__gte=now() - timedelta(days=30)) | 
+            Q(updated_at__gte=now() - timedelta(days=30))
         ).select_related('assigned_by', 'assigned_to', 'project')
 
         project_qs = Project.objects.filter(
-            Q(created_at__gte=now() - timedelta(days=30)) | Q(updated_at__gte=now() - timedelta(days=30))
-        ).select_related('created_by', 'assigned_to')
+            Q(created_at__gte=now() - timedelta(days=30)) | 
+            Q(updated_at__gte=now() - timedelta(days=30))
+        ).select_related('created_by')
+
+        # Get recently created users
+        user_qs = CustomUser.objects.filter(
+            date_joined__gte=now() - timedelta(days=30)
+        )
 
         activities = []
 
+        # Process tasks - CRITICAL: Show task completion as manager's action
         for task in task_qs:
-            action = "updated" if task.updated_at != task.created_at else "created"
-            activities.append({
-                "id": task.id,
-                "type": "task",
-                "title": task.title,
-                "description": task.description,
-                "timestamp": task.updated_at if action == "updated" else task.created_at,
-                "user": task.assigned_by.full_name or task.assigned_by.username,
-                "user_role": task.assigned_by.role,
-                "status": task.status,
-                "action": action
-            })
+            # For task creation
+            if task.created_at >= now() - timedelta(days=1):  # Created recently
+                activities.append({
+                    "id": f"task_{task.id}_created",
+                    "type": "task",
+                    "title": f"Task created: {task.title}",
+                    "description": f"Assigned to {task.assigned_to.full_name or task.assigned_to.username}",
+                    "timestamp": task.created_at,
+                    "user": task.assigned_by.full_name or task.assigned_by.username,
+                    "user_role": task.assigned_by.role,
+                    "status": task.status,
+                    "action": "created",
+                    "task_title": task.title,
+                    "project_name": task.project.name if task.project else "No Project",
+                    "assigned_to": task.assigned_to.full_name or task.assigned_to.username
+                })
+            
+            # For task completion - ATTRIBUTE TO MANAGER, not employee
+            if (task.status == 'completed' and 
+                task.updated_at >= now() - timedelta(days=1) and
+                task.updated_at != task.created_at):  # Ensure it was updated after creation
+                
+                activities.append({
+                    "id": f"task_{task.id}_completed",
+                    "type": "task",
+                    "title": f"Task completed: {task.title}",
+                    "description": f"Completed by team under {task.assigned_by.full_name or task.assigned_by.username}",
+                    "timestamp": task.updated_at,
+                    "user": task.assigned_by.full_name or task.assigned_by.username,  # Show MANAGER, not employee
+                    "user_role": task.assigned_by.role,  # Manager's role
+                    "status": "completed",
+                    "action": "completed",
+                    "task_title": task.title,
+                    "project_name": task.project.name if task.project else "No Project",
+                    "completed_by": task.assigned_to.full_name or task.assigned_to.username  # Optional: show who executed
+                })
 
+        # Process projects
         for project in project_qs:
             action = "updated" if project.updated_at != project.created_at else "created"
             activities.append({
-                "id": project.id,
+                "id": f"project_{project.id}",
                 "type": "project",
-                "title": project.name,
+                "title": f"Project {action}: {project.name}",
                 "description": project.description,
                 "timestamp": project.updated_at if action == "updated" else project.created_at,
                 "user": project.created_by.full_name or project.created_by.username,
                 "user_role": project.created_by.role,
                 "status": "active",
-                "action": action
+                "action": action,
+                "project_name": project.name
             })
 
-        # Sort by timestamp descending and limit to 10 most recent
-        activities.sort(key=lambda x: x['timestamp'], reverse=True)
-        return Response(activities[:10])
+        # Process user creation
+        for user in user_qs:
+            activities.append({
+                "id": f"user_{user.id}",
+                "type": "user",
+                "title": f"User created: {user.full_name or user.username}",
+                "description": f"New {user.role} account created",
+                "timestamp": user.date_joined,
+                "user": "System",
+                "user_role": "supermanager",
+                "status": "active" if user.is_active else "inactive",
+                "action": "created",
+                "target_user": user.full_name or user.username,
+                "user_role_created": user.role
+            })
 
+        # Sort by timestamp descending and apply limit
+        activities.sort(key=lambda x: x['timestamp'], reverse=True)
+        return Response(activities[:limit])
 
 class ReportView(APIView):
     def get(self, request):
@@ -363,3 +393,20 @@ class EmployeeTaskViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # Employees shouldn't be able to assign tasks to others
         serializer.save(assigned_to=self.request.user)
+# Add this at the end of views.py
+
+import os
+from django.views.generic import View
+from django.http import HttpResponse
+from django.conf import settings
+
+class FrontendAppView(View):
+    def get(self, request, *args, **kwargs):
+        try:
+            with open(os.path.join(settings.BASE_DIR, 'frontend_build', 'index.html')) as f:
+                return HttpResponse(f.read())
+        except FileNotFoundError:
+            return HttpResponse(
+                "index.html not found! Make sure your React build is inside 'frontend_build/' folder.",
+                status=501,
+            )

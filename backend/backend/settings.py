@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 from datetime import timedelta
+import logging
 
 # Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -14,7 +15,7 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 # IMPORTANT: For production, specify exact hosts
 ALLOWED_HOSTS = [
     'task-flow-deployment.onrender.com',
-    '.onrender.com', # Allows subdomains
+    '.onrender.com',
     'localhost',
     '127.0.0.1',
 ]
@@ -34,12 +35,12 @@ INSTALLED_APPS = [
     'corsheaders',
     
     # Local apps
-    'tasks',  # Your app
+    'tasks',
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',        # MUST BE FIRST
-    'django.middleware.common.CommonMiddleware',    # MUST BE SECOND
+    'corsheaders.middleware.CorsMiddleware',         # MUST BE FIRST
+    'django.middleware.common.CommonMiddleware',     # MUST BE SECOND
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -51,7 +52,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'backend.urls'
 
-# Templates - integrate React build
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -69,7 +69,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-# Database (SQLite for demo)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -77,32 +76,20 @@ DATABASES = {
     }
 }
 
-# Password validation
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Custom user model
 AUTH_USER_MODEL = 'tasks.CustomUser'
 
-# REST Framework + JWT
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -130,24 +117,18 @@ SIMPLE_JWT = {
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
 }
 
-# Authentication backends
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-# ============== CORS CONFIGURATION (CRITICAL FIX) ==============
-# CORS settings for React frontend
-CORS_ALLOW_ALL_ORIGINS = True  # Set to True temporarily to fix the issue
-
-# IMPORTANT: For JWT authentication, this should be False
+# ============== CORS CONFIGURATION ==============
+CORS_ALLOW_ALL_ORIGINS = True 
 CORS_ALLOW_CREDENTIALS = False
 
-# CSRF trusted origins
 CSRF_TRUSTED_ORIGINS = [
     "https://task-flow-deployment.onrender.com",
 ]
 
-# Allowed headers
 CORS_ALLOW_HEADERS = [
     'accept',
     'accept-encoding',
@@ -160,46 +141,34 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
 ]
 
-# Allowed methods
 CORS_ALLOW_METHODS = [
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
+    'DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST', 'PUT',
 ]
 
 # ============== STATIC FILES CONFIGURATION ==============
-# Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
-
-# Where React build files are located
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'frontend_build', 'static'),
 ]
-
-# Where collectstatic will collect static files for deployment
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-# Use WhiteNoise for serving static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# WhiteNoise configuration
 WHITENOISE_ROOT = os.path.join(BASE_DIR, 'frontend_build')
 
 # ============== SECURITY SETTINGS FOR PRODUCTION ==============
 if not DEBUG:
-    # Security settings for production
+    # Render handles HTTPS redirects at the load balancer level.
+    # We set this to False to prevent redirect loops and CORS handshake failures.
+    SECURE_SSL_REDIRECT = False 
+    
+    # CRITICAL: This tells Django the request is secure even though it's behind a proxy
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = 'DENY'
-    
-    # HTTPS settings (Render provides HTTPS automatically)
-    SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_SECONDS = 31536000 
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
 
@@ -215,22 +184,14 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['console'],
-            'level': 'DEBUG' if DEBUG else 'INFO',
+            'level': 'INFO',
         },
         'corsheaders': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
-        'backend': {
             'handlers': ['console'],
             'level': 'DEBUG',
         },
     },
 }
 
-# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Add for debugging
-import logging
 logging.basicConfig(level=logging.DEBUG)

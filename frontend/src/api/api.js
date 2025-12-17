@@ -570,9 +570,12 @@
 // export default api;
 import axios from 'axios';
 
-// ========== CRITICAL RENDER FIX ==========
-const API_BASE_URL = "/api/"; 
-// =========================================
+/**
+ * CRITICAL FIX: Use a relative path. 
+ * Since Django serves your React app, they share the same domain.
+ * This prevents "Failed to Fetch" errors caused by CORS or HTTPS mismatches.
+ */
+const API_BASE_URL = "/api/";
 
 console.log('=== API CONFIGURATION ===');
 console.log('API Base URL:', API_BASE_URL);
@@ -620,6 +623,7 @@ api.interceptors.response.use(
 // ========== AUTHENTICATION API ==========
 const authApi = {
   login: async (credentials) => {
+    // This will call /api/login/ correctly
     const response = await api.post('login/', credentials);
     if (response.data && response.data.access) {
       const { access, refresh, user: userData } = response.data;
@@ -644,6 +648,7 @@ const authApi = {
     const refreshToken = localStorage.getItem('refresh_token');
     const response = await api.post('token/refresh/', { refresh: refreshToken });
     localStorage.setItem('access_token', response.data.access);
+    api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
     return response.data.access;
   }
 };

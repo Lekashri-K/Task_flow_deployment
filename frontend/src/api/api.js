@@ -1,28 +1,34 @@
 import axios from 'axios';
 
-// Create axios instance
+// ========== CRITICAL FIX: Hardcode the URL ==========
+const API_BASE_URL = 'https://task-flow-deployment.onrender.com/api/';
+console.log('=== API CONFIGURATION ===');
+console.log('Hardcoded API URL:', API_BASE_URL);
+console.log('Full login URL:', API_BASE_URL + 'login/');
+
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8000/api/',
-  timeout: 30000,
-  // IMPORTANT: Remove withCredentials for JWT
+  baseURL: API_BASE_URL,
+  timeout: 15000,  // Increased timeout
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
   }
+  // NO withCredentials
 });
 
-// Authentication API
+// ========== AUTHENTICATION API ==========
 const authApi = {
   login: async (credentials) => {
+    console.log('🔑 Login attempt with:', credentials.username);
+    
     try {
-      console.log('=== LOGIN API CALL ===');
-      console.log('API URL:', api.defaults.baseURL);
+      // CLEAN DEBUG - Show exact URL being called
+      console.log(`📤 POST to: ${api.defaults.baseURL}login/`);
       
-      // USE AXIOS, NOT FETCH
       const response = await api.post('login/', credentials);
       
-      console.log('Login response status:', response.status);
-      console.log('Login response data:', response.data);
+      console.log('✅ Login successful! Status:', response.status);
+      console.log('Response data:', response.data);
       
       if (response.data && response.data.access) {
         const { access, refresh, user: userData } = response.data;
@@ -31,19 +37,26 @@ const authApi = {
         localStorage.setItem('access_token', access);
         localStorage.setItem('refresh_token', refresh);
         
-        // Set axios default header for future requests
+        // Update axios defaults
         api.defaults.headers.common['Authorization'] = `Bearer ${access}`;
+        console.log('✓ Tokens stored and header set');
         
         return { access, refresh, user: userData };
       } else {
+        console.error('❌ Invalid response format:', response.data);
         throw new Error('Invalid response format from server');
       }
       
     } catch (error) {
-      console.error('Login API error details:', {
+      console.error('❌ Login API error details:', {
         message: error.message,
-        response: error.response?.data,
-        status: error.response?.status
+        status: error.response?.status,
+        data: error.response?.data,
+        code: error.code,
+        config: {
+          url: error.config?.url,
+          method: error.config?.method
+        }
       });
       
       // Format error for consistent handling
@@ -60,12 +73,14 @@ const authApi = {
                   'Login failed'
         };
       } else if (error.request) {
-        console.error('No response received:', error.request);
+        console.error('❌ No response received. This is a network error.');
+        console.error('Request was made but no response:', error.request);
         throw {
-          message: 'No response from server. Please check your connection.',
+          message: 'Cannot connect to server. Please check your internet connection.',
           request: error.request
         };
       } else {
+        console.error('❌ Request setup error:', error.message);
         throw {
           message: error.message || 'Login request failed'
         };
@@ -112,7 +127,8 @@ const authApi = {
 
   checkApiHealth: async () => {
     try {
-      await api.get('');
+      const response = await api.get('health/');
+      console.log('API Health:', response.data);
       return true;
     } catch (error) {
       console.error('API health check failed:', error);
@@ -121,37 +137,47 @@ const authApi = {
   }
 };
 
-// Request interceptor for JWT token
+// ========== REQUEST INTERCEPTOR ==========
 api.interceptors.request.use((config) => {
+  console.log(`📤 Making ${config.method?.toUpperCase()} request to:`, config.url);
+  console.log('Full URL:', config.baseURL + config.url);
+  console.log('Request headers:', config.headers);
+  
   const token = localStorage.getItem('access_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
+    console.log('✓ Added Authorization header');
   }
-  console.log('Making request to:', config.url);
+  
   return config;
 }, (error) => {
-  console.error('Request interceptor error:', error);
+  console.error('❌ Request interceptor error:', error);
   return Promise.reject(error);
 });
 
-// Response interceptor
+// ========== RESPONSE INTERCEPTOR ==========
 api.interceptors.response.use(
   (response) => {
-    console.log(`Response ${response.status}: ${response.config.url}`);
+    console.log(`✅ Response ${response.status}: ${response.config.url}`);
     return response;
   },
   async (error) => {
-    console.log('Response interceptor caught error:', {
+    console.error('❌ Response error details:', {
       status: error.response?.status,
       url: error.config?.url,
-      message: error.message
+      message: error.message,
+      code: error.code,
+      responseData: error.response?.data
     });
     
     // Handle network errors
     if (!error.response) {
-      console.error('Network error - no response received');
-      error.message = 'Network error - please check your connection';
-      return Promise.reject(error);
+      console.error('❌ NETWORK ERROR - No response received from server');
+      console.error('This means:');
+      console.error('1. Server is down or not responding');
+      console.error('2. CORS is blocking the request');
+      console.error('3. Network connection issue');
+      error.message = 'Cannot connect to server. Please check if the server is running.';
     }
 
     const originalRequest = error.config;
@@ -182,7 +208,7 @@ api.interceptors.response.use(
   }
 );
 
-// Super Manager API
+// ========== SUPER MANAGER API ==========
 const superManagerApi = {
   getDashboardStats: async () => {
     try {
@@ -395,7 +421,7 @@ const superManagerApi = {
   }
 };
 
-// Manager API
+// ========== MANAGER API ==========
 const managerApi = {
   getDashboardStats: async () => {
     try {
@@ -478,7 +504,7 @@ const managerApi = {
   }
 };
 
-// Employee API
+// ========== EMPLOYEE API ==========
 const employeeApi = {
   getTasks: async () => {
     try {
@@ -521,6 +547,19 @@ const employeeApi = {
       console.error('Failed to delete task:', error.response?.data);
       throw error;
     }
+  }
+};
+
+// ========== TEST FUNCTION ==========
+export const testConnection = async () => {
+  console.log('🔍 Testing connection to server...');
+  try {
+    const response = await api.get('health/');
+    console.log('✅ Server is reachable:', response.data);
+    return true;
+  } catch (error) {
+    console.error('❌ Cannot reach server:', error.message);
+    return false;
   }
 };
 

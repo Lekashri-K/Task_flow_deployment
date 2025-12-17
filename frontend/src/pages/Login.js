@@ -77,18 +77,35 @@ export default function Login() {
 
   // TEST FUNCTION - Direct API call to check what the server returns
   const testDirectLogin = async () => {
-    try {
-      console.log('Testing direct login...');
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8000/api/'}login/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: 'wronguser',
-          password: 'wrongpass'
-        })
-      });
+   try {
+  console.log('Testing direct login...');
+
+  // Use the environment variable only
+  const apiUrl = process.env.REACT_APP_API_URL;
+  if (!apiUrl) {
+    throw new Error('REACT_APP_API_URL is not defined!');
+  }
+
+  const response = await fetch(`${apiUrl}login/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      username: 'wronguser',
+      password: 'wrongpass'
+    })
+  });
+
+  console.log('Response status:', response.status);
+
+  const data = await response.json();
+  console.log('Direct test response:', data);
+
+} catch (error) {
+  console.error('Direct test error:', error);
+}
+
       
       const data = await response.json();
       console.log('Direct test response:', data);

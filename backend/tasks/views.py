@@ -43,12 +43,19 @@ class LoginView(APIView):
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
         refresh = RefreshToken.for_user(user)
+        
+        # Return proper format
         return Response({
-            'user': UserSerializer(user).data,
+            'user': {
+                'id': user.id,
+                'username': user.username,
+                'email': user.email,
+                'role': user.role,
+                'full_name': user.full_name if hasattr(user, 'full_name') else user.username,
+            },
             'refresh': str(refresh),
             'access': str(refresh.access_token),
         })
-
 
 class UserView(APIView):
     permission_classes = [IsAuthenticated]

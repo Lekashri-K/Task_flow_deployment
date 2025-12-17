@@ -21,22 +21,41 @@ router.register(r'manager/tasks', ManagerTaskViewSet, basename='manager-tasks')
 router.register(r'employee/tasks', EmployeeTaskViewSet, basename='employee-tasks')
 
 def health_check(request):
-    return JsonResponse({'status': 'ok', 'message': 'Server is running'})
+    return JsonResponse({
+        'status': 'ok', 
+        'timestamp': time.time(),
+        'service': 'django',
+        'message': 'Server is running'
+    })
+
+def cors_test(request):
+    if request.method == 'OPTIONS':
+        response = JsonResponse({"status": "preflight ok"})
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+        response["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+        return response
+    
+    return JsonResponse({
+        "status": "ok",
+        "message": "CORS test successful"
+    })
 
 urlpatterns = [
-    # API endpoints are isolated under /api/
-    path('api/', include([
-        path('health/', health_check, name='health'),
-        path('login/', LoginView.as_view(permission_classes=[AllowAny]), name='login'),
-        path('user/', UserView.as_view(), name='user'),
-        path('supermanager-dashboard-stats/', SuperManagerDashboardStats.as_view(), name='supermanager-dashboard-stats'),
-        path('manager-dashboard-stats/', ManagerDashboardStats.as_view(), name='manager-dashboard-stats'),
-        path('manager/employees/', ManagerEmployeeListView.as_view(), name='manager-employees'),
-        path('recent-activity/', RecentActivityView.as_view(), name='recent-activity'),
-        path('reports/', ReportView.as_view(), name='reports'),
-        path('', include(router.urls)),
-    ])),
+    # Test endpoints (outside /api/)
+    path('health/', health_check, name='health'),
+    path('cors-test/', cors_test, name='cors-test'),
     
-    # Catch-all for Frontend (must not interfere with /api/ or /static/)
-    re_path(r'^(?!api|static|admin).*$', FrontendAppView.as_view(), name='frontend'),
+    # API endpoints under /api/
+    path('api/login/', LoginView.as_view(), name='login'),
+    path('api/user/', UserView.as_view(), name='user'),
+    path('api/supermanager-dashboard-stats/', SuperManagerDashboardStats.as_view(), name='supermanager-dashboard-stats'),
+    path('api/manager-dashboard-stats/', ManagerDashboardStats.as_view(), name='manager-dashboard-stats'),
+    path('api/manager/employees/', ManagerEmployeeListView.as_view(), name='manager-employees'),
+    path('api/recent-activity/', RecentActivityView.as_view(), name='recent-activity'),
+    path('api/reports/', ReportView.as_view(), name='reports'),
+    path('api/', include(router.urls)),
+    
+    # React frontend (CATCH ALL - MUST BE LAST)
+    re_path(r'^.*$', FrontendAppView.as_view(), name='frontend'),
 ]

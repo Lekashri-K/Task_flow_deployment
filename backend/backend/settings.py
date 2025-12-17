@@ -14,9 +14,9 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 # IMPORTANT: For production, specify exact hosts
 ALLOWED_HOSTS = [
     'task-flow-deployment.onrender.com',
+    '.onrender.com', # Allows subdomains
     'localhost',
     '127.0.0.1',
-    '*',  # Remove this in production
 ]
 
 # Application definition

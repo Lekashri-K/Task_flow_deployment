@@ -570,12 +570,10 @@
 // export default api;
 import axios from 'axios';
 
-/**
- * CRITICAL FIX: Use a relative path. 
- * Since Django serves your React app, they share the same domain.
- * This prevents "Failed to Fetch" errors caused by CORS or HTTPS mismatches.
- */
-const API_BASE_URL = "/api/";
+// ========== CRITICAL RENDER FIX ==========
+// We use a relative path so it works on Render and locally without CORS errors
+const API_BASE_URL = "/api/"; 
+// =========================================
 
 console.log('=== API CONFIGURATION ===');
 console.log('API Base URL:', API_BASE_URL);
@@ -608,11 +606,16 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry && !originalRequest.url.includes('login/')) {
       originalRequest._retry = true;
       try {
-        const newToken = await authApi.refreshToken();
+        const refreshToken = localStorage.getItem('refresh_token');
+        const response = await api.post('token/refresh/', { refresh: refreshToken });
+        const newToken = response.data.access;
+        localStorage.setItem('access_token', newToken);
         originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
         return api(originalRequest);
       } catch (refreshError) {
-        authApi.logout();
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        window.location.href = '/login';
         return Promise.reject(refreshError);
       }
     }
@@ -623,7 +626,6 @@ api.interceptors.response.use(
 // ========== AUTHENTICATION API ==========
 const authApi = {
   login: async (credentials) => {
-    // This will call /api/login/ correctly
     const response = await api.post('login/', credentials);
     if (response.data && response.data.access) {
       const { access, refresh, user: userData } = response.data;
@@ -645,10 +647,9 @@ const authApi = {
     window.location.href = '/login';
   },
   refreshToken: async () => {
-    const refreshToken = localStorage.getItem('refresh_token');
-    const response = await api.post('token/refresh/', { refresh: refreshToken });
+    const refresh = localStorage.getItem('refresh_token');
+    const response = await api.post('token/refresh/', { refresh });
     localStorage.setItem('access_token', response.data.access);
-    api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
     return response.data.access;
   }
 };

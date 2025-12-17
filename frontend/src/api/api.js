@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 // ========== CRITICAL FIX: Hardcode the URL ==========
-const API_BASE_URL = 'https://task-flow-deployment.onrender.com/api/';
+const API_BASE_URL = 'https://task-flow-deployment.onrender.com/';
+
 console.log('=== API CONFIGURATION ===');
 console.log('Hardcoded API URL:', API_BASE_URL);
 console.log('Full login URL:', API_BASE_URL + 'login/');

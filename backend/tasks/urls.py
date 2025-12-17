@@ -46,29 +46,21 @@ def test_endpoint(request):
     })
 
 urlpatterns = [
-    # ========== HEALTH & TEST ENDPOINTS ==========
-    path('health/', health_check, name='health'),
-    path('test/', test_endpoint, name='test'),
+    # Wrap all API endpoints in the 'api/' prefix
+    path('api/', include([
+        path('health/', health_check, name='health'),
+        path('test/', test_endpoint, name='test'),
+        path('login/', LoginView.as_view(permission_classes=[AllowAny]), name='login'),
+        path('user/', UserView.as_view(), name='user'),
+        path('supermanager-dashboard-stats/', SuperManagerDashboardStats.as_view(), name='supermanager-dashboard-stats'),
+        path('manager-dashboard-stats/', ManagerDashboardStats.as_view(), name='manager-dashboard-stats'),
+        path('manager/employees/', ManagerEmployeeListView.as_view(), name='manager-employees'),
+        path('recent-activity/', RecentActivityView.as_view(), name='recent-activity'),
+        path('reports/', ReportView.as_view(), name='reports'),
+        path('', include(router.urls)),
+    ])),
     
-    # ========== AUTHENTICATION ==========
-    path('login/', LoginView.as_view(permission_classes=[AllowAny]), name='login'),
-    path('user/', UserView.as_view(), name='user'),
-    
-    # ========== DASHBOARD STATS ==========
-    path('supermanager-dashboard-stats/', SuperManagerDashboardStats.as_view(), name='supermanager-dashboard-stats'),
-    path('manager-dashboard-stats/', ManagerDashboardStats.as_view(), name='manager-dashboard-stats'),
-    
-    # ========== MANAGER ENDPOINTS ==========
-    path('manager/employees/', ManagerEmployeeListView.as_view(), name='manager-employees'),
-    
-    # ========== ACTIVITY & REPORTS ==========
-    path('recent-activity/', RecentActivityView.as_view(), name='recent-activity'),
-    path('reports/', ReportView.as_view(), name='reports'),
-    
-    # ========== API ROUTES ==========
-    path('', include(router.urls)),
-    
-    # ========== REACT FRONTEND ==========
-    # This must be LAST to catch all other routes
+    # REACT FRONTEND - Catch all other routes
+    # This remains OUTSIDE the api/ prefix
     re_path(r'^.*$', FrontendAppView.as_view(), name='frontend'),
 ]

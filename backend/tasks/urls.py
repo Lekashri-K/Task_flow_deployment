@@ -21,11 +21,11 @@ router.register(r'manager/tasks', ManagerTaskViewSet, basename='manager-tasks')
 router.register(r'employee/tasks', EmployeeTaskViewSet, basename='employee-tasks')
 
 def health_check(request):
-    return JsonResponse({'status': 'ok', 'message': 'Server is running'})
+    return JsonResponse({'status': 'ok', 'timestamp': time.time(), 'message': 'Server is running'})
 
 # 2. URL Patterns
 urlpatterns = [
-    # API Group: Keep everything under /api/
+    # API Group: All backend logic stays inside here
     path('api/', include([
         path('health/', health_check, name='health'),
         path('login/', LoginView.as_view(), name='login'),
@@ -39,6 +39,7 @@ urlpatterns = [
     ])),
     
     # REACT FRONTEND CATCH-ALL
-    # (?!api|static|admin) means "Match anything UNLESS it starts with api, static, or admin"
+    # This regex ensures that only requests NOT starting with 'api', 'static', or 'admin' 
+    # are sent to the React frontend.
     re_path(r'^(?!api|static|admin).*$', FrontendAppView.as_view(), name='frontend'),
 ]

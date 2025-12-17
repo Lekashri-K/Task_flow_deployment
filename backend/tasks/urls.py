@@ -1,93 +1,7 @@
-
-# from django.urls import path, include 
-# from rest_framework.permissions import AllowAny
-# from .views import ReportView
-# from .views import (
-#     LoginView, 
-#     UserView,
-#     SuperManagerDashboardStats,
-#     SuperManagerUserViewSet,
-#     SuperManagerProjectViewSet,
-#     SuperManagerTaskViewSet,
-#     RecentActivityView,
-#     ManagerProjectViewSet,  # Add this import
-#     ManagerTaskViewSet,     # Add this import
-#     ManagerEmployeeListView ,
-#      ManagerDashboardStats,
-#      EmployeeTaskViewSet,
-     
-# )
-# from rest_framework.routers import DefaultRouter
-
-# router = DefaultRouter()
-# router.register(r'supermanager/users', SuperManagerUserViewSet, basename='supermanager-users')
-# router.register(r'supermanager/projects', SuperManagerProjectViewSet, basename='supermanager-projects')
-# router.register(r'supermanager/tasks', SuperManagerTaskViewSet, basename='supermanager-tasks')
-# router.register(r'manager/projects', ManagerProjectViewSet, basename='manager-projects')
-# router.register(r'manager/tasks', ManagerTaskViewSet, basename='manager-tasks')
-# router.register(r'employee/tasks', EmployeeTaskViewSet, basename='employee-tasks')
-
-
-
-# urlpatterns = [
-#     path('login/', LoginView.as_view(permission_classes=[AllowAny]), name='login'),
-#     path('user/', UserView.as_view(), name='user'),
-#     path('supermanager-dashboard-stats/', SuperManagerDashboardStats.as_view(), name='supermanager-dashboard-stats'),
-#      path('manager/employees/', ManagerEmployeeListView.as_view(), name='manager-employees'),
-#       path('manager-dashboard-stats/', ManagerDashboardStats.as_view(), name='manager-dashboard-stats'),
-#     path('recent-activity/', RecentActivityView.as_view(), name='recent-activity'),
-#     path('reports/', ReportView.as_view(), name='reports'),
-#     path('', include(router.urls)),
-# ]
-# # urls.py
-# # from django.urls import path, include
-# # from rest_framework.permissions import AllowAny
-# # from rest_framework.routers import DefaultRouter
-# # from .views import (
-# #     LoginView,
-# #     UserView,
-# #     SuperManagerDashboardStats,
-# #     SuperManagerUserViewSet,
-# #     SuperManagerProjectViewSet,
-# #     SuperManagerTaskViewSet,
-# #     RecentActivityView,
-# #     ReportView,
-# #     ManagerDashboardStats,
-# #     ManagerProjectViewSet,
-# #     ManagerTaskViewSet,
-# #     ActivitySerializer  # Remove ActivityViewSet from here if not needed
-# # )
-
-# # router = DefaultRouter()
-
-# # # Super Manager routes
-# # router.register(r'supermanager/users', SuperManagerUserViewSet, basename='supermanager-users')
-# # router.register(r'supermanager/projects', SuperManagerProjectViewSet, basename='supermanager-projects')
-# # router.register(r'supermanager/tasks', SuperManagerTaskViewSet, basename='supermanager-tasks')
-
-# # # Manager routes
-# # router.register(r'manager/projects', ManagerProjectViewSet, basename='manager-projects')
-# # router.register(r'manager/tasks', ManagerTaskViewSet, basename='manager-tasks')
-
-# # urlpatterns = [
-# #     # Authentication
-# #     path('login/', LoginView.as_view(permission_classes=[AllowAny]), name='login'),
-# #     path('user/', UserView.as_view(), name='user'),
-    
-# #     # Dashboard stats
-# #     path('supermanager-dashboard-stats/', SuperManagerDashboardStats.as_view(), name='supermanager-dashboard-stats'),
-# #     path('manager-dashboard-stats/', ManagerDashboardStats.as_view(), name='manager-dashboard-stats'),
-    
-# #     # Activity and reports
-# #     path('recent-activity/', RecentActivityView.as_view(), name='recent-activity'),
-# #     path('reports/', ReportView.as_view(), name='reports'),
-    
-# #     # Include all router URLs
-# #     path('', include(router.urls)),
-# # ]
-from django.urls import path, include, re_path  # add re_path
+from django.urls import path, include, re_path
 from rest_framework.permissions import AllowAny
-from .views import ReportView
+from django.http import JsonResponse
+import time
 from .views import (
     LoginView, 
     UserView,
@@ -101,7 +15,8 @@ from .views import (
     ManagerEmployeeListView,
     ManagerDashboardStats,
     EmployeeTaskViewSet,
-    FrontendAppView,  # <-- import the new view
+    ReportView,
+    FrontendAppView,
 )
 from rest_framework.routers import DefaultRouter
 
@@ -113,16 +28,47 @@ router.register(r'manager/projects', ManagerProjectViewSet, basename='manager-pr
 router.register(r'manager/tasks', ManagerTaskViewSet, basename='manager-tasks')
 router.register(r'employee/tasks', EmployeeTaskViewSet, basename='employee-tasks')
 
+# Health check endpoint
+def health_check(request):
+    return JsonResponse({
+        'status': 'ok',
+        'timestamp': time.time(),
+        'service': 'django',
+        'message': 'Server is running'
+    })
+
+# Simple test endpoint for debugging
+def test_endpoint(request):
+    return JsonResponse({
+        'message': 'Test endpoint works',
+        'method': request.method,
+        'path': request.path,
+    })
+
 urlpatterns = [
+    # ========== HEALTH & TEST ENDPOINTS ==========
+    path('health/', health_check, name='health'),
+    path('test/', test_endpoint, name='test'),
+    
+    # ========== AUTHENTICATION ==========
     path('login/', LoginView.as_view(permission_classes=[AllowAny]), name='login'),
     path('user/', UserView.as_view(), name='user'),
+    
+    # ========== DASHBOARD STATS ==========
     path('supermanager-dashboard-stats/', SuperManagerDashboardStats.as_view(), name='supermanager-dashboard-stats'),
-    path('manager/employees/', ManagerEmployeeListView.as_view(), name='manager-employees'),
     path('manager-dashboard-stats/', ManagerDashboardStats.as_view(), name='manager-dashboard-stats'),
+    
+    # ========== MANAGER ENDPOINTS ==========
+    path('manager/employees/', ManagerEmployeeListView.as_view(), name='manager-employees'),
+    
+    # ========== ACTIVITY & REPORTS ==========
     path('recent-activity/', RecentActivityView.as_view(), name='recent-activity'),
     path('reports/', ReportView.as_view(), name='reports'),
+    
+    # ========== API ROUTES ==========
     path('', include(router.urls)),
-
-    # Add this at the very end to serve the React frontend
+    
+    # ========== REACT FRONTEND ==========
+    # This must be LAST to catch all other routes
     re_path(r'^.*$', FrontendAppView.as_view(), name='frontend'),
 ]

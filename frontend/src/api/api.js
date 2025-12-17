@@ -1,11 +1,10 @@
-
 import axios from 'axios';
 
 // Create axios instance
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8000/api/',
   timeout: 30000,
-  withCredentials: true,
+  // REMOVED withCredentials as it can cause CORS issues with JWT
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
@@ -16,34 +15,56 @@ const api = axios.create({
 const authApi = {
   login: async (credentials) => {
     try {
-      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000/api/';
-      console.log('Making login request to:', `${apiUrl}login/`);
+      console.log('Making login request with credentials:', credentials);
       
-      const response = await fetch(`${apiUrl}login/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(credentials)
-      });
+      // Use axios consistently
+      const response = await api.post('login/', credentials);
+      
+      console.log('Login response data:', response.data);
 
-      const data = await response.json();
-      console.log('Login response:', data);
-
-      if (!response.ok) {
-        throw {
+      if (response.data && response.data.access && response.data.user) {
+        const { access, refresh, user: userData } = response.data;
+        
+        // Store tokens
+        localStorage.setItem('access_token', access);
+        localStorage.setItem('refresh_token', refresh);
+        
+        // Set axios default header for future requests
+        api.defaults.headers.common['Authorization'] = `Bearer ${access}`;
+        
+        console.log('Tokens stored successfully');
+        return { access, refresh, user: userData };
+      } else {
+        throw new Error('Invalid response format from server');
+      }
+      
+    } catch (error) {
+      console.error('Login API error:', error);
+      
+      // Format error for consistent handling
+      if (error.response) {
+        // Server responded with error status
+        const errorData = {
           response: {
-            data: data,
-            status: response.status,
-            statusText: response.statusText
-          }
+            data: error.response.data,
+            status: error.response.status,
+            statusText: error.response.statusText
+          },
+          message: error.response.data?.detail || error.response.data?.error || 'Login failed'
+        };
+        throw errorData;
+      } else if (error.request) {
+        // No response received
+        throw {
+          message: 'No response from server. Please check your connection.',
+          request: error.request
+        };
+      } else {
+        // Request setup error
+        throw {
+          message: error.message || 'Login request failed'
         };
       }
-
-      return data;
-    } catch (error) {
-      console.error('Login error:', error);
-      throw error;
     }
   },
 
@@ -58,6 +79,7 @@ const authApi = {
   },
 
   logout: () => {
+    console.log('Performing logout...');
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     delete api.defaults.headers.common['Authorization'];
@@ -67,16 +89,23 @@ const authApi = {
   refreshToken: async () => {
     try {
       const refreshToken = localStorage.getItem('refresh_token');
-      if (!refreshToken) throw new Error('No refresh token available');
+      if (!refreshToken) {
+        throw new Error('No refresh token available');
+      }
 
       const response = await api.post('token/refresh/', {
         refresh: refreshToken
       });
 
-      const newToken = response.data.access;
-      localStorage.setItem('access_token', newToken);
-      api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
-      return newToken;
+      if (response.data.access) {
+        const newToken = response.data.access;
+        localStorage.setItem('access_token', newToken);
+        api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+        console.log('Token refreshed successfully');
+        return newToken;
+      } else {
+        throw new Error('Invalid refresh token response');
+      }
     } catch (error) {
       console.error('Refresh token failed:', error);
       throw error;
@@ -156,7 +185,6 @@ const superManagerApi = {
     }
   },
 
-  // UPDATED: Get all recent activities with limit for top 5
   getRecentActivities: async (limit = 10) => {
     try {
       const response = await api.get(`recent-activity/?limit=${limit}`);
@@ -167,7 +195,6 @@ const superManagerApi = {
     }
   },
 
-  // NEW: Get activities by user role
   getActivitiesByRole: async (role) => {
     try {
       const response = await api.get(`recent-activity/?user_role=${role}`);
@@ -443,19 +470,32 @@ api.interceptors.request.use((config) => {
   const token = localStorage.getItem('access_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
+    console.log('Request interceptor: Added Authorization header');
+  } else {
+    console.log('Request interceptor: No token found');
   }
   return config;
 }, (error) => {
+  console.error('Request interceptor error:', error);
   return Promise.reject(error);
 });
 
 // Response interceptor
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log(`Response ${response.status}: ${response.config.url}`);
+    return response;
+  },
   async (error) => {
-    console.log('Interceptor caught error:', error.response?.status);
+    console.log('Response interceptor caught error:', {
+      status: error.response?.status,
+      url: error.config?.url,
+      message: error.message
+    });
     
+    // Handle network errors
     if (!error.response) {
+      console.error('Network error - no response received');
       error.message = 'Network error - please check your connection';
       return Promise.reject(error);
     }
@@ -464,25 +504,28 @@ api.interceptors.response.use(
 
     // Skip token refresh for login requests
     if (originalRequest.url && originalRequest.url.includes('login/')) {
+      console.log('Skipping token refresh for login endpoint');
       return Promise.reject(error);
     }
 
     // If unauthorized (401) and not already retried
     if (error.response?.status === 401 && !originalRequest._retry) {
+      console.log('401 Unauthorized, attempting token refresh...');
       originalRequest._retry = true;
 
       try {
-        console.log('Attempting token refresh...');
         const newToken = await authApi.refreshToken();
         originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+        console.log('Token refreshed, retrying original request');
         return api(originalRequest);
       } catch (refreshError) {
-        console.error('Refresh token failed:', refreshError);
+        console.error('Refresh token failed, logging out:', refreshError);
         authApi.logout();
         return Promise.reject(refreshError);
       }
     }
 
+    // For other errors, pass them through
     return Promise.reject(error);
   }
 );

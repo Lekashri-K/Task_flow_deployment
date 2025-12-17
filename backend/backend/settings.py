@@ -7,20 +7,10 @@ from django.http import HttpResponse
 # Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY', 'fallback-secret-key')
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-# IMPORTANT: For production, specify exact hosts
-ALLOWED_HOSTS = [
-    'task-flow-deployment.onrender.com',
-    '.onrender.com',
-    'localhost',
-    '127.0.0.1',
-    '*',  # Temporary for debugging
-]
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
@@ -30,51 +20,42 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
-    # Third-party apps
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
-    
-    # Local apps
     'tasks',
 ]
 
-# ============== CUSTOM CORS MIDDLEWARE ==============
-class CorsFixMiddleware:
+# ========== CUSTOM CORS MIDDLEWARE ==========
+class CorsMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
-        # Handle preflight OPTIONS requests
-        if request.method == 'OPTIONS':
+        # Handle OPTIONS requests
+        if request.method == "OPTIONS":
             response = HttpResponse()
-            response['Access-Control-Allow-Origin'] = '*'
-            response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-            response['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-Requested-With'
-            response['Access-Control-Max-Age'] = '86400'
+            response["Access-Control-Allow-Origin"] = "*"
+            response["Access-Control-Allow-Methods"] = "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+            response["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+            response["Access-Control-Max-Age"] = "86400"
             return response
-        
+
         response = self.get_response(request)
-        
-        # Add CORS headers to all responses
-        response['Access-Control-Allow-Origin'] = '*'
-        response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-        response['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-Requested-With'
-        
+        response["Access-Control-Allow-Origin"] = "*"
         return response
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',         # MUST BE FIRST
-    'django.middleware.common.CommonMiddleware',     # MUST BE SECOND
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # Keep this for django-cors-headers
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'backend.settings.CorsFixMiddleware',           # Custom CORS handler
+    'backend.settings.CorsMiddleware',  # Our custom middleware - MUST BE LAST
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -124,10 +105,6 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
-    ],
 }
 
 SIMPLE_JWT = {
@@ -148,104 +125,32 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-# ============== CORS CONFIGURATION ==============
+# ========== CORS CONFIGURATION ==========
+# Keep django-cors-headers settings too
 CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = False  # Must be False for JWT
+CORS_ALLOW_CREDENTIALS = False
+CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
+CORS_ALLOW_HEADERS = ['*']
 
-CORS_PREFLIGHT_MAX_AGE = 86400
-
-CORS_ALLOW_METHODS = [
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
-]
-
-CORS_ALLOW_HEADERS = [
-    'accept',
-    'accept-encoding',
-    'authorization',
-    'content-type',
-    'dnt',
-    'origin',
-    'user-agent',
-    'x-csrftoken',
-    'x-requested-with',
-]
-
-# ============== STATIC FILES CONFIGURATION ==============
+# ========== STATIC FILES ==========
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'frontend_build', 'static'),
-]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'frontend_build', 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-WHITENOISE_ROOT = os.path.join(BASE_DIR, 'frontend_build')
 
-# ============== SECURITY SETTINGS FOR PRODUCTION ==============
-if not DEBUG:
-    # Render handles HTTPS redirects
-    SECURE_SSL_REDIRECT = False 
-    
-    # CRITICAL: Tell Django the request is secure behind proxy
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    X_FRAME_OPTIONS = 'DENY'
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    SECURE_HSTS_SECONDS = 31536000 
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-
-# ============== LOGGING CONFIGURATION ==============
+# ========== LOGGING ==========
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {message}',
-            'style': '{',
-        },
-    },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
         },
     },
     'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': 'INFO',
-            'propagate': True,
-        },
-        'corsheaders': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
-        'backend': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
-        'tasks': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
+        'django': {'handlers': ['console'], 'level': 'INFO'},
+        'backend': {'handlers': ['console'], 'level': 'DEBUG'},
     },
 }
 
-# Enable debug logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# For debugging
-print(f"=== Django Settings Loaded ===")
-print(f"DEBUG: {DEBUG}")
-print(f"ALLOWED_HOSTS: {ALLOWED_HOSTS}")
-print(f"CORS_ALLOW_ALL_ORIGINS: {CORS_ALLOW_ALL_ORIGINS}")
-print(f"CORS_ALLOW_CREDENTIALS: {CORS_ALLOW_CREDENTIALS}")

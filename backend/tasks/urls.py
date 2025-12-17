@@ -1,25 +1,17 @@
 from django.urls import path, include, re_path
-from rest_framework.permissions import AllowAny
 from django.http import JsonResponse
 import time
 from .views import (
-    LoginView, 
-    UserView,
-    SuperManagerDashboardStats,
-    SuperManagerUserViewSet,
-    SuperManagerProjectViewSet,
-    SuperManagerTaskViewSet,
-    RecentActivityView,
-    ManagerProjectViewSet,
-    ManagerTaskViewSet,
-    ManagerEmployeeListView,
-    ManagerDashboardStats,
-    EmployeeTaskViewSet,
-    ReportView,
-    FrontendAppView,
+    LoginView, UserView, SuperManagerDashboardStats, 
+    SuperManagerUserViewSet, SuperManagerProjectViewSet, 
+    SuperManagerTaskViewSet, RecentActivityView, 
+    ManagerProjectViewSet, ManagerTaskViewSet, 
+    ManagerEmployeeListView, ManagerDashboardStats, 
+    EmployeeTaskViewSet, ReportView, FrontendAppView,
 )
 from rest_framework.routers import DefaultRouter
 
+# 1. API Router Setup
 router = DefaultRouter()
 router.register(r'supermanager/users', SuperManagerUserViewSet, basename='supermanager-users')
 router.register(r'supermanager/projects', SuperManagerProjectViewSet, basename='supermanager-projects')
@@ -28,30 +20,15 @@ router.register(r'manager/projects', ManagerProjectViewSet, basename='manager-pr
 router.register(r'manager/tasks', ManagerTaskViewSet, basename='manager-tasks')
 router.register(r'employee/tasks', EmployeeTaskViewSet, basename='employee-tasks')
 
-# Health check endpoint
 def health_check(request):
-    return JsonResponse({
-        'status': 'ok',
-        'timestamp': time.time(),
-        'service': 'django',
-        'message': 'Server is running'
-    })
+    return JsonResponse({'status': 'ok', 'message': 'Server is running'})
 
-# Simple test endpoint for debugging
-def test_endpoint(request):
-    return JsonResponse({
-        'message': 'Test endpoint works',
-        'method': request.method,
-        'path': request.path,
-    })
-
+# 2. URL Patterns
 urlpatterns = [
-    # Wrap all API endpoints in the 'api/' prefix
+    # API Group: Keep everything under /api/
     path('api/', include([
         path('health/', health_check, name='health'),
-        path('test/', test_endpoint, name='test'),
-      path('login/', LoginView.as_view(), name='login'),
-
+        path('login/', LoginView.as_view(), name='login'),
         path('user/', UserView.as_view(), name='user'),
         path('supermanager-dashboard-stats/', SuperManagerDashboardStats.as_view(), name='supermanager-dashboard-stats'),
         path('manager-dashboard-stats/', ManagerDashboardStats.as_view(), name='manager-dashboard-stats'),
@@ -61,7 +38,7 @@ urlpatterns = [
         path('', include(router.urls)),
     ])),
     
-    # REACT FRONTEND - Catch all other routes
-    # This remains OUTSIDE the api/ prefix
-    re_path(r'^.*$', FrontendAppView.as_view(), name='frontend'),
+    # REACT FRONTEND CATCH-ALL
+    # (?!api|static|admin) means "Match anything UNLESS it starts with api, static, or admin"
+    re_path(r'^(?!api|static|admin).*$', FrontendAppView.as_view(), name='frontend'),
 ]

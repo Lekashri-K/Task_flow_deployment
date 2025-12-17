@@ -1,4 +1,5 @@
 from django.urls import path, include, re_path
+from rest_framework.permissions import AllowAny
 from django.http import JsonResponse
 import time
 from .views import (
@@ -11,7 +12,6 @@ from .views import (
 )
 from rest_framework.routers import DefaultRouter
 
-# 1. API Router Setup
 router = DefaultRouter()
 router.register(r'supermanager/users', SuperManagerUserViewSet, basename='supermanager-users')
 router.register(r'supermanager/projects', SuperManagerProjectViewSet, basename='supermanager-projects')
@@ -21,14 +21,13 @@ router.register(r'manager/tasks', ManagerTaskViewSet, basename='manager-tasks')
 router.register(r'employee/tasks', EmployeeTaskViewSet, basename='employee-tasks')
 
 def health_check(request):
-    return JsonResponse({'status': 'ok', 'timestamp': time.time(), 'message': 'Server is running'})
+    return JsonResponse({'status': 'ok', 'message': 'Server is running'})
 
-# 2. URL Patterns
 urlpatterns = [
-    # API Group: All backend logic stays inside here
+    # 1. Group ALL API logic here
     path('api/', include([
         path('health/', health_check, name='health'),
-        path('login/', LoginView.as_view(), name='login'),
+        path('login/', LoginView.as_view(permission_classes=[AllowAny]), name='login'),
         path('user/', UserView.as_view(), name='user'),
         path('supermanager-dashboard-stats/', SuperManagerDashboardStats.as_view(), name='supermanager-dashboard-stats'),
         path('manager-dashboard-stats/', ManagerDashboardStats.as_view(), name='manager-dashboard-stats'),
@@ -38,8 +37,6 @@ urlpatterns = [
         path('', include(router.urls)),
     ])),
     
-    # REACT FRONTEND CATCH-ALL
-    # This regex ensures that only requests NOT starting with 'api', 'static', or 'admin' 
-    # are sent to the React frontend.
+    # 2. React Catch-all (Must stay at the bottom and handle regex)
     re_path(r'^(?!api|static|admin).*$', FrontendAppView.as_view(), name='frontend'),
 ]

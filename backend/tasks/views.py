@@ -33,6 +33,8 @@ class SuperManagerDashboardStats(APIView):
 
 
 class LoginView(APIView):
+    permission_classes = [AllowAny]   # ⭐ THIS LINE IS REQUIRED
+
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
@@ -40,11 +42,13 @@ class LoginView(APIView):
         user = authenticate(username=username, password=password)
 
         if not user:
-            return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response(
+                {'error': 'Invalid credentials'},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
 
         refresh = RefreshToken.for_user(user)
-        
-        # Return proper format
+
         return Response({
             'user': {
                 'id': user.id,
@@ -56,7 +60,6 @@ class LoginView(APIView):
             'refresh': str(refresh),
             'access': str(refresh.access_token),
         })
-
 class UserView(APIView):
     permission_classes = [IsAuthenticated]
 

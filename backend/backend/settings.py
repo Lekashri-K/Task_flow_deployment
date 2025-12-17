@@ -114,10 +114,13 @@ AUTHENTICATION_BACKENDS = [
 
 # CORS (React frontend demo)
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
+    "http://localhost:3000",  # Local dev
+    "http://127.0.0.1:3000",  # Local dev
+    "https://task-flow-deployment.onrender.com",  # Production frontend
 ]
+
 CORS_ALLOW_CREDENTIALS = True
+
 CORS_ALLOW_ALL_ORIGINS = True  # Demo only
 
 # Static files - React build integration

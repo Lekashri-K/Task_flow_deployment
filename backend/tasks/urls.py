@@ -50,7 +50,8 @@ urlpatterns = [
     path('api/', include([
         path('health/', health_check, name='health'),
         path('test/', test_endpoint, name='test'),
-        path('login/', LoginView.as_view(permission_classes=[AllowAny]), name='login'),
+      path('login/', LoginView.as_view(), name='login'),
+
         path('user/', UserView.as_view(), name='user'),
         path('supermanager-dashboard-stats/', SuperManagerDashboardStats.as_view(), name='supermanager-dashboard-stats'),
         path('manager-dashboard-stats/', ManagerDashboardStats.as_view(), name='manager-dashboard-stats'),

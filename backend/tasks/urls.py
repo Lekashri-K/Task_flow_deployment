@@ -24,7 +24,7 @@ def health_check(request):
     return JsonResponse({'status': 'ok', 'message': 'Server is running'})
 
 urlpatterns = [
-    # 1. Group ALL API logic here
+    # API endpoints are isolated under /api/
     path('api/', include([
         path('health/', health_check, name='health'),
         path('login/', LoginView.as_view(permission_classes=[AllowAny]), name='login'),
@@ -37,6 +37,6 @@ urlpatterns = [
         path('', include(router.urls)),
     ])),
     
-    # 2. React Catch-all (Must stay at the bottom and handle regex)
+    # Catch-all for Frontend (must not interfere with /api/ or /static/)
     re_path(r'^(?!api|static|admin).*$', FrontendAppView.as_view(), name='frontend'),
 ]

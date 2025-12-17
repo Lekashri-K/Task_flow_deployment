@@ -4,7 +4,7 @@ import axios from 'axios';
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8000/api/',
   timeout: 30000,
-  // REMOVED withCredentials as it can cause CORS issues with JWT
+  // IMPORTANT: Remove withCredentials for JWT
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
@@ -15,14 +15,16 @@ const api = axios.create({
 const authApi = {
   login: async (credentials) => {
     try {
-      console.log('Making login request with credentials:', credentials);
+      console.log('=== LOGIN API CALL ===');
+      console.log('API URL:', api.defaults.baseURL);
       
-      // Use axios consistently
+      // USE AXIOS, NOT FETCH
       const response = await api.post('login/', credentials);
       
+      console.log('Login response status:', response.status);
       console.log('Login response data:', response.data);
-
-      if (response.data && response.data.access && response.data.user) {
+      
+      if (response.data && response.data.access) {
         const { access, refresh, user: userData } = response.data;
         
         // Store tokens
@@ -32,35 +34,38 @@ const authApi = {
         // Set axios default header for future requests
         api.defaults.headers.common['Authorization'] = `Bearer ${access}`;
         
-        console.log('Tokens stored successfully');
         return { access, refresh, user: userData };
       } else {
         throw new Error('Invalid response format from server');
       }
       
     } catch (error) {
-      console.error('Login API error:', error);
+      console.error('Login API error details:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
       
       // Format error for consistent handling
       if (error.response) {
-        // Server responded with error status
-        const errorData = {
+        throw {
           response: {
             data: error.response.data,
             status: error.response.status,
             statusText: error.response.statusText
           },
-          message: error.response.data?.detail || error.response.data?.error || 'Login failed'
+          message: error.response.data?.detail || 
+                  error.response.data?.error || 
+                  error.response.data?.message || 
+                  'Login failed'
         };
-        throw errorData;
       } else if (error.request) {
-        // No response received
+        console.error('No response received:', error.request);
         throw {
           message: 'No response from server. Please check your connection.',
           request: error.request
         };
       } else {
-        // Request setup error
         throw {
           message: error.message || 'Login request failed'
         };
@@ -79,7 +84,7 @@ const authApi = {
   },
 
   logout: () => {
-    console.log('Performing logout...');
+    console.log('Logging out...');
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     delete api.defaults.headers.common['Authorization'];
@@ -89,23 +94,16 @@ const authApi = {
   refreshToken: async () => {
     try {
       const refreshToken = localStorage.getItem('refresh_token');
-      if (!refreshToken) {
-        throw new Error('No refresh token available');
-      }
+      if (!refreshToken) throw new Error('No refresh token available');
 
       const response = await api.post('token/refresh/', {
         refresh: refreshToken
       });
 
-      if (response.data.access) {
-        const newToken = response.data.access;
-        localStorage.setItem('access_token', newToken);
-        api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
-        console.log('Token refreshed successfully');
-        return newToken;
-      } else {
-        throw new Error('Invalid refresh token response');
-      }
+      const newToken = response.data.access;
+      localStorage.setItem('access_token', newToken);
+      api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+      return newToken;
     } catch (error) {
       console.error('Refresh token failed:', error);
       throw error;
@@ -122,6 +120,67 @@ const authApi = {
     }
   }
 };
+
+// Request interceptor for JWT token
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('access_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  console.log('Making request to:', config.url);
+  return config;
+}, (error) => {
+  console.error('Request interceptor error:', error);
+  return Promise.reject(error);
+});
+
+// Response interceptor
+api.interceptors.response.use(
+  (response) => {
+    console.log(`Response ${response.status}: ${response.config.url}`);
+    return response;
+  },
+  async (error) => {
+    console.log('Response interceptor caught error:', {
+      status: error.response?.status,
+      url: error.config?.url,
+      message: error.message
+    });
+    
+    // Handle network errors
+    if (!error.response) {
+      console.error('Network error - no response received');
+      error.message = 'Network error - please check your connection';
+      return Promise.reject(error);
+    }
+
+    const originalRequest = error.config;
+
+    // Skip token refresh for login requests
+    if (originalRequest.url && originalRequest.url.includes('login/')) {
+      return Promise.reject(error);
+    }
+
+    // If unauthorized (401) and not already retried
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      console.log('401 Unauthorized, attempting token refresh...');
+      originalRequest._retry = true;
+
+      try {
+        const newToken = await authApi.refreshToken();
+        originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+        console.log('Token refreshed, retrying request');
+        return api(originalRequest);
+      } catch (refreshError) {
+        console.error('Refresh token failed, logging out:', refreshError);
+        authApi.logout();
+        return Promise.reject(refreshError);
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 // Super Manager API
 const superManagerApi = {
@@ -464,71 +523,6 @@ const employeeApi = {
     }
   }
 };
-
-// Request interceptor for JWT token
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('access_token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-    console.log('Request interceptor: Added Authorization header');
-  } else {
-    console.log('Request interceptor: No token found');
-  }
-  return config;
-}, (error) => {
-  console.error('Request interceptor error:', error);
-  return Promise.reject(error);
-});
-
-// Response interceptor
-api.interceptors.response.use(
-  (response) => {
-    console.log(`Response ${response.status}: ${response.config.url}`);
-    return response;
-  },
-  async (error) => {
-    console.log('Response interceptor caught error:', {
-      status: error.response?.status,
-      url: error.config?.url,
-      message: error.message
-    });
-    
-    // Handle network errors
-    if (!error.response) {
-      console.error('Network error - no response received');
-      error.message = 'Network error - please check your connection';
-      return Promise.reject(error);
-    }
-
-    const originalRequest = error.config;
-
-    // Skip token refresh for login requests
-    if (originalRequest.url && originalRequest.url.includes('login/')) {
-      console.log('Skipping token refresh for login endpoint');
-      return Promise.reject(error);
-    }
-
-    // If unauthorized (401) and not already retried
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      console.log('401 Unauthorized, attempting token refresh...');
-      originalRequest._retry = true;
-
-      try {
-        const newToken = await authApi.refreshToken();
-        originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
-        console.log('Token refreshed, retrying original request');
-        return api(originalRequest);
-      } catch (refreshError) {
-        console.error('Refresh token failed, logging out:', refreshError);
-        authApi.logout();
-        return Promise.reject(refreshError);
-      }
-    }
-
-    // For other errors, pass them through
-    return Promise.reject(error);
-  }
-);
 
 export { authApi, managerApi, superManagerApi, employeeApi };
 export default api;

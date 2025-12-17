@@ -16,6 +16,64 @@ from .serializers import UserSerializer, ProjectSerializer, TaskSerializer
 from django.db.models.functions import TruncDate
 from rest_framework import generics  # Add this import
 from rest_framework.permissions import AllowAny
+
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate
+
+@method_decorator(csrf_exempt, name='dispatch')
+class LoginView(APIView):
+    permission_classes = []  # Allow anyone to access
+    
+    def options(self, request, *args, **kwargs):
+        """Handle OPTIONS requests for CORS preflight"""
+        from django.http import HttpResponse
+        response = HttpResponse()
+        response['Access-Control-Allow-Origin'] = '*'
+        response['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
+        response['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+        response['Access-Control-Max-Age'] = '86400'
+        return response
+    
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        
+        print(f"Login attempt for: {username}")
+        
+        user = authenticate(username=username, password=password)
+        
+        if not user:
+            print(f"Authentication failed for: {username}")
+            response = Response(
+                {'detail': 'Invalid credentials'}, 
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+            response['Access-Control-Allow-Origin'] = '*'
+            return response
+        
+        refresh = RefreshToken.for_user(user)
+        
+        response_data = {
+            'user': {
+                'id': user.id,
+                'username': user.username,
+                'email': user.email if hasattr(user, 'email') else '',
+                'role': user.role if hasattr(user, 'role') else 'user',
+                'full_name': user.full_name if hasattr(user, 'full_name') else user.username,
+            },
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        }
+        
+        print(f"Login successful for: {username}")
+        response = Response(response_data)
+        response['Access-Control-Allow-Origin'] = '*'
+        return response
 class SuperManagerDashboardStats(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -33,34 +91,7 @@ class SuperManagerDashboardStats(APIView):
         return Response(stats)
 
 
-class LoginView(APIView):
-    permission_classes = [AllowAny]
 
-    def post(self, request):
-        username = request.data.get('username')
-        password = request.data.get('password')
-
-        user = authenticate(username=username, password=password)
-
-        if not user:
-            return Response(
-                {'error': 'Invalid credentials'},
-                status=status.HTTP_401_UNAUTHORIZED
-            )
-
-        refresh = RefreshToken.for_user(user)
-
-        return Response({
-            'user': {
-                'id': user.id,
-                'username': user.username,
-                'email': user.email,
-                'role': user.role,
-                'full_name': getattr(user, 'full_name', user.username),
-            },
-            'refresh': str(refresh),
-            'access': str(refresh.access_token),
-        })
 class UserView(APIView):
     permission_classes = [IsAuthenticated]
 

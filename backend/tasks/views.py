@@ -15,6 +15,7 @@ from .models import CustomUser, Project, Task
 from .serializers import UserSerializer, ProjectSerializer, TaskSerializer
 from django.db.models.functions import TruncDate
 from rest_framework import generics  # Add this import
+from rest_framework.permissions import AllowAny
 class SuperManagerDashboardStats(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -33,7 +34,7 @@ class SuperManagerDashboardStats(APIView):
 
 
 class LoginView(APIView):
-    permission_classes = [AllowAny]   # ⭐ THIS LINE IS REQUIRED
+    permission_classes = [AllowAny]
 
     def post(self, request):
         username = request.data.get('username')
@@ -55,7 +56,7 @@ class LoginView(APIView):
                 'username': user.username,
                 'email': user.email,
                 'role': user.role,
-                'full_name': user.full_name if hasattr(user, 'full_name') else user.username,
+                'full_name': getattr(user, 'full_name', user.username),
             },
             'refresh': str(refresh),
             'access': str(refresh.access_token),

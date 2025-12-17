@@ -122,11 +122,21 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # ============== CORS CONFIGURATION ==============
-CORS_ALLOW_ALL_ORIGINS = True 
-CORS_ALLOW_CREDENTIALS = False
+# settings.py
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://task-flow-deployment.onrender.com",
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = False  # Set to False because you are using JWT, not Sessions
+
+# Add this to handle the "Preflight" request specifically
+CORS_PREFLIGHT_MAX_AGE = 86400
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
 ]
 
 CORS_ALLOW_HEADERS = [
@@ -140,11 +150,6 @@ CORS_ALLOW_HEADERS = [
     'x-csrftoken',
     'x-requested-with',
 ]
-
-CORS_ALLOW_METHODS = [
-    'DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST', 'PUT',
-]
-
 # ============== STATIC FILES CONFIGURATION ==============
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [

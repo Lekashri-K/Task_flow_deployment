@@ -1,0 +1,2737 @@
+[
+{
+  "model": "admin.logentry",
+  "pk": 1,
+  "fields": {
+    "action_time": "2025-07-24T14:56:35.967Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "2",
+    "object_repr": "leka",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 2,
+  "fields": {
+    "action_time": "2025-07-24T14:57:07.643Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "3",
+    "object_repr": "santhiya",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 3,
+  "fields": {
+    "action_time": "2025-07-24T14:58:56.041Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "4",
+    "object_repr": "jothi",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 4,
+  "fields": {
+    "action_time": "2025-07-25T09:11:23.089Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "1",
+    "object_repr": "project1 (Managed by: santhiya S)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 5,
+  "fields": {
+    "action_time": "2025-07-25T09:13:28.574Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "1",
+    "object_repr": "task1 - Pending",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 6,
+  "fields": {
+    "action_time": "2025-07-25T09:17:06.342Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "2",
+    "object_repr": "project2 (Managed by: santhiya S)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 7,
+  "fields": {
+    "action_time": "2025-07-25T09:18:06.133Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "2",
+    "object_repr": "task2 - Completed",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 8,
+  "fields": {
+    "action_time": "2025-07-25T10:25:42.535Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "3",
+    "object_repr": "project3 (Managed by: santhiya S)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 9,
+  "fields": {
+    "action_time": "2025-07-25T17:22:27.890Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "5",
+    "object_repr": "task5 - Pending",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 10,
+  "fields": {
+    "action_time": "2025-07-25T17:50:52.144Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "7",
+    "object_repr": "bala (employee)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is active\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 11,
+  "fields": {
+    "action_time": "2025-07-25T17:51:09.176Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "6",
+    "object_repr": "dhepika (employee)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is active\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 12,
+  "fields": {
+    "action_time": "2025-07-25T17:52:01.915Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "4",
+    "object_repr": "jothi (employee)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is active\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 13,
+  "fields": {
+    "action_time": "2025-07-25T18:29:50.482Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "4",
+    "object_repr": "jothi (employee)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is active\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 14,
+  "fields": {
+    "action_time": "2025-07-25T18:50:56.941Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "6",
+    "object_repr": "project new (Managed by: santhiya S)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 15,
+  "fields": {
+    "action_time": "2025-07-25T18:50:56.941Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "5",
+    "object_repr": "project4 (Managed by: santhiya S)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 16,
+  "fields": {
+    "action_time": "2025-07-25T18:50:56.941Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "4",
+    "object_repr": "project3 (Managed by: santhiya S)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 17,
+  "fields": {
+    "action_time": "2025-07-25T18:50:56.941Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "2",
+    "object_repr": "project2 (Managed by: santhiya S)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 18,
+  "fields": {
+    "action_time": "2025-07-25T18:50:56.941Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "1",
+    "object_repr": "project1 (Managed by: santhiya S)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 19,
+  "fields": {
+    "action_time": "2025-07-25T18:51:23.702Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "7",
+    "object_repr": "project1 (Managed by: santhiya S)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 20,
+  "fields": {
+    "action_time": "2025-07-25T18:52:25.967Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "6",
+    "object_repr": "task1 - Completed",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 21,
+  "fields": {
+    "action_time": "2025-07-25T18:53:46.413Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "7",
+    "object_repr": "task2 - In Progress",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 22,
+  "fields": {
+    "action_time": "2025-07-25T18:54:38.182Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "8",
+    "object_repr": "task3 - Pending",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 23,
+  "fields": {
+    "action_time": "2025-07-25T18:59:48.037Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "8",
+    "object_repr": "project no 2 (Managed by: santhiya S)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 24,
+  "fields": {
+    "action_time": "2025-07-25T19:01:01.973Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "8",
+    "object_repr": "project no 2 (Managed by: santhiya S)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 25,
+  "fields": {
+    "action_time": "2025-07-25T19:01:01.973Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "7",
+    "object_repr": "project1 (Managed by: santhiya S)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 26,
+  "fields": {
+    "action_time": "2025-07-25T19:01:41.032Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "9",
+    "object_repr": "task manager (Managed by: santhiya S)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 27,
+  "fields": {
+    "action_time": "2025-07-26T06:21:49.227Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "11",
+    "object_repr": "The Robinhood - Completed",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Status\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 28,
+  "fields": {
+    "action_time": "2025-07-26T06:22:20.956Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "12",
+    "object_repr": "WFW (Managed by: santhiya S)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 29,
+  "fields": {
+    "action_time": "2025-07-26T06:22:20.956Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "11",
+    "object_repr": "abc (Managed by: santhiya S)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 30,
+  "fields": {
+    "action_time": "2025-07-26T06:22:20.956Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "10",
+    "object_repr": "project new (Managed by: santhiya S)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 31,
+  "fields": {
+    "action_time": "2025-07-26T06:22:20.956Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "9",
+    "object_repr": "task manager (Managed by: santhiya S)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 32,
+  "fields": {
+    "action_time": "2025-07-26T06:26:22.803Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "13",
+    "object_repr": "create the home page - Completed",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Status\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 33,
+  "fields": {
+    "action_time": "2025-07-26T06:27:28.003Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "5",
+    "object_repr": "API Test User (supermanager)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 34,
+  "fields": {
+    "action_time": "2025-07-26T06:27:28.003Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "7",
+    "object_repr": "bala (employee)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 35,
+  "fields": {
+    "action_time": "2025-07-26T06:27:28.003Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "6",
+    "object_repr": "dhepika (employee)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 36,
+  "fields": {
+    "action_time": "2025-07-26T06:27:28.003Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "8",
+    "object_repr": "gayathri (employee)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 37,
+  "fields": {
+    "action_time": "2025-07-26T06:29:09.177Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "10",
+    "object_repr": "dhepika (manager)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"password\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 38,
+  "fields": {
+    "action_time": "2025-07-26T11:47:58.428Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "16",
+    "object_repr": "ramya (employee)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is active\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 39,
+  "fields": {
+    "action_time": "2025-07-26T18:43:57.942Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "17",
+    "object_repr": "djksj - Completed",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Status\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 40,
+  "fields": {
+    "action_time": "2025-07-26T18:44:24.992Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "17",
+    "object_repr": "djksj - In Progress",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Status\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 41,
+  "fields": {
+    "action_time": "2025-07-26T18:53:24.119Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "20",
+    "object_repr": "task3 - Pending",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Status\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 42,
+  "fields": {
+    "action_time": "2025-07-26T18:53:52.058Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "20",
+    "object_repr": "task3 - Completed",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Status\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 43,
+  "fields": {
+    "action_time": "2025-07-26T19:02:31.038Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "19",
+    "object_repr": "task2 - Pending",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Status\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 44,
+  "fields": {
+    "action_time": "2025-07-26T19:02:43.704Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "18",
+    "object_repr": "task1 - Pending",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Status\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 45,
+  "fields": {
+    "action_time": "2025-07-26T19:02:52.770Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "20",
+    "object_repr": "task3 - Pending",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Status\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 46,
+  "fields": {
+    "action_time": "2025-07-26T19:03:25.435Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "17",
+    "object_repr": "djksj - Completed",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Status\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 47,
+  "fields": {
+    "action_time": "2025-07-26T19:09:37.427Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "16",
+    "object_repr": "summa (Managed by: kaviya)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 48,
+  "fields": {
+    "action_time": "2025-07-26T19:09:57.305Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "17",
+    "object_repr": "summa2 (Managed by: dhepika)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 49,
+  "fields": {
+    "action_time": "2025-07-26T19:10:12.970Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "18",
+    "object_repr": "dbdjdb (Managed by: dhepika)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 50,
+  "fields": {
+    "action_time": "2025-07-26T19:10:29.147Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "19",
+    "object_repr": "bdbDJ (Managed by: kaviya)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 51,
+  "fields": {
+    "action_time": "2025-07-27T19:37:06.976Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "29",
+    "object_repr": "jolly (Managed by: dhineshraj)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 52,
+  "fields": {
+    "action_time": "2025-07-27T19:37:06.976Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "27",
+    "object_repr": "kanaku project (Managed by: chitra)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 53,
+  "fields": {
+    "action_time": "2025-07-27T19:37:06.976Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "25",
+    "object_repr": "aslina projevtTTT (Managed by: dhepika)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 54,
+  "fields": {
+    "action_time": "2025-07-27T19:37:06.976Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "24",
+    "object_repr": "aslina (Managed by: kaviya)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 55,
+  "fields": {
+    "action_time": "2025-07-27T19:37:06.976Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "23",
+    "object_repr": "abc (Managed by: dhineshraj)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 56,
+  "fields": {
+    "action_time": "2025-07-27T19:37:06.976Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "20",
+    "object_repr": "adhisayam (Managed by: dhepika)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 57,
+  "fields": {
+    "action_time": "2025-07-27T19:37:06.976Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "15",
+    "object_repr": "test (Managed by: kaviya)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 58,
+  "fields": {
+    "action_time": "2025-07-27T19:38:22.062Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "17",
+    "object_repr": "djksj - Completed",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 59,
+  "fields": {
+    "action_time": "2025-07-27T19:38:22.062Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "16",
+    "object_repr": "task - Completed",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 60,
+  "fields": {
+    "action_time": "2025-07-27T19:38:22.062Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "13",
+    "object_repr": "create the home page - Completed",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 61,
+  "fields": {
+    "action_time": "2025-07-28T02:53:41.028Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "19",
+    "object_repr": "chitra (manager)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 62,
+  "fields": {
+    "action_time": "2025-07-28T02:53:41.028Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "10",
+    "object_repr": "dhepika (manager)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 63,
+  "fields": {
+    "action_time": "2025-07-28T02:53:41.028Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "18",
+    "object_repr": "dhineshraj (manager)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 64,
+  "fields": {
+    "action_time": "2025-07-28T02:53:41.028Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "9",
+    "object_repr": "gayathri (employee)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 65,
+  "fields": {
+    "action_time": "2025-07-28T02:53:41.028Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "4",
+    "object_repr": "jothi (employee)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 66,
+  "fields": {
+    "action_time": "2025-07-28T02:53:41.028Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "12",
+    "object_repr": "kaviya (manager)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 67,
+  "fields": {
+    "action_time": "2025-07-28T02:53:41.028Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "3",
+    "object_repr": "santhiya S (manager)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 68,
+  "fields": {
+    "action_time": "2025-07-28T02:54:33.422Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "26",
+    "object_repr": "santhiya S (supermanager)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 69,
+  "fields": {
+    "action_time": "2025-07-28T02:55:20.467Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "27",
+    "object_repr": "jothi (employee)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 70,
+  "fields": {
+    "action_time": "2025-07-28T02:55:56.527Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "28",
+    "object_repr": "ramya (employee)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 71,
+  "fields": {
+    "action_time": "2025-07-28T02:56:45.502Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "29",
+    "object_repr": "gayathri (employee)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 72,
+  "fields": {
+    "action_time": "2025-07-28T02:57:31.470Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "30",
+    "object_repr": "dhepika (manager)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 73,
+  "fields": {
+    "action_time": "2025-07-28T02:59:59.900Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "26",
+    "object_repr": "santhiya S (manager)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Role\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 74,
+  "fields": {
+    "action_time": "2025-07-28T03:14:17.209Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "69",
+    "object_repr": "Create projects showcase - Overdue",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Due date\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 75,
+  "fields": {
+    "action_time": "2025-07-28T03:14:52.515Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "68",
+    "object_repr": "Build homepage with intro - Pending",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Due date\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 76,
+  "fields": {
+    "action_time": "2025-07-28T03:24:59.264Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "69",
+    "object_repr": "Create projects showcase - Overdue",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 77,
+  "fields": {
+    "action_time": "2025-07-28T03:24:59.265Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "68",
+    "object_repr": "Build homepage with intro - Pending",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 78,
+  "fields": {
+    "action_time": "2025-07-28T03:24:59.265Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "67",
+    "object_repr": "Integrate Q&A dataset - Completed",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 79,
+  "fields": {
+    "action_time": "2025-07-28T03:24:59.265Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "66",
+    "object_repr": "Design conversation flow - Completed",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 80,
+  "fields": {
+    "action_time": "2025-07-28T03:24:59.265Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "65",
+    "object_repr": "Research chatbot frameworks - Completed",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 81,
+  "fields": {
+    "action_time": "2025-07-28T03:24:59.265Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "64",
+    "object_repr": "Export monthly report as PDF - Completed",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 82,
+  "fields": {
+    "action_time": "2025-07-28T03:24:59.265Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "63",
+    "object_repr": "Build category-wise chart - Pending",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 83,
+  "fields": {
+    "action_time": "2025-07-28T03:24:59.265Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "62",
+    "object_repr": "Create expense input form - In Progress",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 84,
+  "fields": {
+    "action_time": "2025-07-28T03:24:59.265Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "61",
+    "object_repr": "Design dashboard layout - Completed",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 85,
+  "fields": {
+    "action_time": "2025-07-28T03:24:59.265Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "60",
+    "object_repr": "Add payment gateway integration - Completed",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 86,
+  "fields": {
+    "action_time": "2025-07-28T03:24:59.265Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "59",
+    "object_repr": "Implement cart functionality - In Progress",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 87,
+  "fields": {
+    "action_time": "2025-07-28T03:24:59.265Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "58",
+    "object_repr": "Create product listing page - Pending",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 88,
+  "fields": {
+    "action_time": "2025-07-28T03:24:59.265Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "57",
+    "object_repr": "Set up user authentication - Pending",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 89,
+  "fields": {
+    "action_time": "2025-07-28T03:24:59.265Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "56",
+    "object_repr": "Design homepage UI - Pending",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 90,
+  "fields": {
+    "action_time": "2025-07-28T03:39:02.652Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "84",
+    "object_repr": "Create projects showcase - Overdue",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Due date\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 91,
+  "fields": {
+    "action_time": "2025-07-29T03:31:21.540Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "37",
+    "object_repr": "test (Managed by: dhepika)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 92,
+  "fields": {
+    "action_time": "2025-07-29T08:09:27.979Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "101",
+    "object_repr": "jothi task - Pending",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 93,
+  "fields": {
+    "action_time": "2025-07-29T08:10:19.826Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "102",
+    "object_repr": "jothi task2 - Pending",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 94,
+  "fields": {
+    "action_time": "2025-07-29T08:11:25.069Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "103",
+    "object_repr": "jothi task3 - Overdue",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 95,
+  "fields": {
+    "action_time": "2025-07-29T08:43:38.595Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "104",
+    "object_repr": "joe task 3 - Pending",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 96,
+  "fields": {
+    "action_time": "2025-07-29T17:21:56.808Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "34",
+    "object_repr": "abcdefg (employee)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 97,
+  "fields": {
+    "action_time": "2025-07-29T17:21:56.810Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "48",
+    "object_repr": "dfghj (employee)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 98,
+  "fields": {
+    "action_time": "2025-07-29T17:21:56.810Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "42",
+    "object_repr": "check (employee)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 99,
+  "fields": {
+    "action_time": "2025-07-29T17:21:56.810Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "46",
+    "object_repr": "asdfghjk (employee)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 100,
+  "fields": {
+    "action_time": "2025-07-29T17:21:56.810Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "35",
+    "object_repr": "dhineshraj (employee)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 101,
+  "fields": {
+    "action_time": "2025-07-29T17:21:56.810Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "47",
+    "object_repr": "final (employee)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 102,
+  "fields": {
+    "action_time": "2025-07-29T17:21:56.810Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "39",
+    "object_repr": "kadavuley (manager)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 103,
+  "fields": {
+    "action_time": "2025-07-29T17:21:56.810Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "38",
+    "object_repr": "sdfghjk (manager)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 104,
+  "fields": {
+    "action_time": "2025-07-29T17:21:56.810Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "41",
+    "object_repr": "personal (employee)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 105,
+  "fields": {
+    "action_time": "2025-07-29T17:21:56.810Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "36",
+    "object_repr": "sathya (employee)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 106,
+  "fields": {
+    "action_time": "2025-07-29T17:21:56.810Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "45",
+    "object_repr": "zxcvbnmwertyu (employee)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 107,
+  "fields": {
+    "action_time": "2025-07-29T17:21:56.810Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "43",
+    "object_repr": "sugar (employee)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 108,
+  "fields": {
+    "action_time": "2025-07-29T17:21:56.810Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "40",
+    "object_repr": "takku (employee)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 109,
+  "fields": {
+    "action_time": "2025-07-29T17:22:20.511Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "106",
+    "object_repr": "abcdef - Pending",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 110,
+  "fields": {
+    "action_time": "2025-07-29T17:22:20.511Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "104",
+    "object_repr": "joe task 3 - Pending",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 111,
+  "fields": {
+    "action_time": "2025-07-29T17:22:20.511Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "103",
+    "object_repr": "jothi task3 - Overdue",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 112,
+  "fields": {
+    "action_time": "2025-07-29T17:22:20.511Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "101",
+    "object_repr": "jothi task - Completed",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 113,
+  "fields": {
+    "action_time": "2025-07-29T17:22:20.511Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "99",
+    "object_repr": "The Robinhood - Pending",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 114,
+  "fields": {
+    "action_time": "2025-07-29T17:22:20.511Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "84",
+    "object_repr": "Create projects showcase - Overdue",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 115,
+  "fields": {
+    "action_time": "2025-07-29T17:22:20.511Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "83",
+    "object_repr": "Build homepage with intro - Completed",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 116,
+  "fields": {
+    "action_time": "2025-07-29T17:22:20.511Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "79",
+    "object_repr": "Export monthly report as PDF - In Progress",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 117,
+  "fields": {
+    "action_time": "2025-07-29T17:22:20.511Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "78",
+    "object_repr": "Build category-wise chart - Completed",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 118,
+  "fields": {
+    "action_time": "2025-07-29T17:22:20.511Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "77",
+    "object_repr": "Create expense input form - Completed",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 119,
+  "fields": {
+    "action_time": "2025-07-29T17:22:20.511Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "76",
+    "object_repr": "Design dashboard layout - Completed",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 120,
+  "fields": {
+    "action_time": "2025-07-29T17:22:20.511Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "75",
+    "object_repr": "Add payment gateway integration - In Progress",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 121,
+  "fields": {
+    "action_time": "2025-07-29T17:22:20.511Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "74",
+    "object_repr": "Implement cart functionality - Completed",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 122,
+  "fields": {
+    "action_time": "2025-07-29T17:22:20.511Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "73",
+    "object_repr": "Create product listing page - Overdue",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 123,
+  "fields": {
+    "action_time": "2025-07-29T17:22:20.511Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "72",
+    "object_repr": "Set up user authentication - Pending",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 124,
+  "fields": {
+    "action_time": "2025-07-29T17:22:20.511Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "71",
+    "object_repr": "Design homepage UI - Pending",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 125,
+  "fields": {
+    "action_time": "2025-07-29T17:22:35.177Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "44",
+    "object_repr": "asdfghjk (Managed by: dhepika)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 126,
+  "fields": {
+    "action_time": "2025-07-29T17:22:35.177Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "42",
+    "object_repr": "cvbnm (Managed by: dhepika)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 127,
+  "fields": {
+    "action_time": "2025-07-29T17:22:35.179Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "40",
+    "object_repr": "task management (Managed by: dhepika)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 128,
+  "fields": {
+    "action_time": "2025-07-29T17:22:35.179Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "39",
+    "object_repr": "summa (Managed by: santhiya S)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 129,
+  "fields": {
+    "action_time": "2025-07-29T17:22:35.179Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "38",
+    "object_repr": "abc (Managed by: dhepika)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 130,
+  "fields": {
+    "action_time": "2025-07-29T17:22:35.179Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "37",
+    "object_repr": "test (Managed by: dhepika)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 131,
+  "fields": {
+    "action_time": "2025-07-29T17:22:35.179Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "35",
+    "object_repr": "Portfolio Website (Managed by: dhepika)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 132,
+  "fields": {
+    "action_time": "2025-07-29T17:22:35.179Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "33",
+    "object_repr": "Personal Finance Tracker (Managed by: dhepika)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 133,
+  "fields": {
+    "action_time": "2025-07-29T17:22:35.179Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "32",
+    "object_repr": "E-Commerce Website (Managed by: santhiya S)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 134,
+  "fields": {
+    "action_time": "2025-07-29T17:29:04.309Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "26",
+    "object_repr": "santhiya (manager)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Full name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 135,
+  "fields": {
+    "action_time": "2025-07-29T17:59:21.471Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "134",
+    "object_repr": "Supplier Management - Pending",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Status\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 136,
+  "fields": {
+    "action_time": "2025-07-29T18:04:16.438Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "149",
+    "object_repr": "Export Statement - Overdue",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Due date\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 137,
+  "fields": {
+    "action_time": "2025-07-29T18:29:26.397Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "139",
+    "object_repr": "Build Chat UI - Overdue",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Due date\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 138,
+  "fields": {
+    "action_time": "2025-07-31T03:04:47.535Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "136",
+    "object_repr": "Star Rating Integration - In Progress",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Due date\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 139,
+  "fields": {
+    "action_time": "2025-11-09T17:55:23.260Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "2",
+    "object_repr": "lekashri (supermanager)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"password\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 140,
+  "fields": {
+    "action_time": "2025-11-09T17:56:03.027Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "2",
+    "object_repr": "Lekashri (supermanager)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Username\", \"Email\", \"Full name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 141,
+  "fields": {
+    "action_time": "2025-11-09T18:09:53.545Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "30",
+    "object_repr": "dhepika (manager)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"password\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 142,
+  "fields": {
+    "action_time": "2025-11-09T18:10:30.652Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "30",
+    "object_repr": "Dhepika (manager)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Username\", \"Email\", \"Full name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 143,
+  "fields": {
+    "action_time": "2025-11-09T18:33:03.245Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "27",
+    "object_repr": "jothi (employee)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"password\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 144,
+  "fields": {
+    "action_time": "2025-11-09T18:34:44.703Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "27",
+    "object_repr": "John Deo (employee)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Username\", \"Email\", \"Full name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 145,
+  "fields": {
+    "action_time": "2025-11-09T18:47:50.135Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "26",
+    "object_repr": "santhiya (manager)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"password\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 146,
+  "fields": {
+    "action_time": "2025-11-09T18:48:22.419Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "26",
+    "object_repr": "Gabriella Johnson (manager)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Username\", \"Email\", \"Full name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 147,
+  "fields": {
+    "action_time": "2025-11-09T18:50:06.817Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "29",
+    "object_repr": "David (employee)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Username\", \"Email\", \"Full name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 148,
+  "fields": {
+    "action_time": "2025-11-09T18:50:45.345Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "29",
+    "object_repr": "David (employee)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Username\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 149,
+  "fields": {
+    "action_time": "2025-11-09T18:51:08.560Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "29",
+    "object_repr": "David (employee)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Email\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 150,
+  "fields": {
+    "action_time": "2025-11-09T18:51:22.777Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "29",
+    "object_repr": "David (employee)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"password\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 151,
+  "fields": {
+    "action_time": "2025-11-09T18:51:32.015Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "29",
+    "object_repr": "David (employee)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Username\", \"Email\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 152,
+  "fields": {
+    "action_time": "2025-11-09T18:55:28.693Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "28",
+    "object_repr": "ramya (employee)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"password\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 153,
+  "fields": {
+    "action_time": "2025-11-09T18:55:53.004Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "28",
+    "object_repr": "Alexander (employee)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Username\", \"Email\", \"Full name\"]}}]"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "2syqodtd40h1n048q67gpje3qfitlbjy",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2pChEFpcuvcMZGBmpGpoUtpV491tky50-997f1MR16XEtfEcR1JXZdTld0uYX1wPQE-sj0nnqS7zmPSh6JM2fZ-I37fT_Tso2MpeZ3AGgsmWke3gewFGF5AgI_icHCRL0FkjjLI73pOgCA9EvRMInfp8AfqaOQc:1ufDi9:4eMHcxbQeWo3B-Rl_bWRTHgi8Z7ghLlQhm4WkJzCkeM",
+    "expire_date": "2025-08-08T08:23:25.771Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "b0x4enf2bwnydsu2r16hrnspo1j4jgmu",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2pChEFpcuvcMZGBmpGpoUtpV491tky50-997f1MR16XEtfEcR1JXZdTld0uYX1wPQE-sj0nnqS7zmPSh6JM2fZ-I37fT_Tso2MpeZ3AGgsmWke3gewFGF5AgI_icHCRL0FkjjLI73pOgCA9EvRMInfp8AfqaOQc:1ufLGv:zvcxD0k89jV3XxIQsGGftBGsuzTHOIY6iUwZQDHhaps",
+    "expire_date": "2025-08-08T16:27:49.955Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "c1qyklrkty1nvz8yw5r8fovu4lt770aj",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2pChEFpcuvcMZGBmpGpoUtpV491tky50-997f1MR16XEtfEcR1JXZdTld0uYX1wPQE-sj0nnqS7zmPSh6JM2fZ-I37fT_Tso2MpeZ3AGgsmWke3gewFGF5AgI_icHCRL0FkjjLI73pOgCA9EvRMInfp8AfqaOQc:1ufYP7:FwLvm05ySFEsJC_trzgP44NmXz2fdPaFq4l1oB24Pqc",
+    "expire_date": "2025-08-09T06:29:09.202Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "gqcuwi3qdhfwe3hetd4fn9p1uklilh0x",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2pChEFpcuvcMZGBmpGpoUtpV491tky50-997f1MR16XEtfEcR1JXZdTld0uYX1wPQE-sj0nnqS7zmPSh6JM2fZ-I37fT_Tso2MpeZ3AGgsmWke3gewFGF5AgI_icHCRL0FkjjLI73pOgCA9EvRMInfp8AfqaOQc:1vIAZU:v4mhsG2ck5tUdmaiBGxW14l7auO3flRmNXkqF6y8eO0",
+    "expire_date": "2025-11-23T18:55:28.719Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "uhu5xs7d0cwzp68j82agk39eo08nhcji",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2pChEFpcuvcMZGBmpGpoUtpV491tky50-997f1MR16XEtfEcR1JXZdTld0uYX1wPQE-sj0nnqS7zmPSh6JM2fZ-I37fT_Tso2MpeZ3AGgsmWke3gewFGF5AgI_icHCRL0FkjjLI73pOgCA9EvRMInfp8AfqaOQc:1uexMf:B8xILpaItWzvkh-loHal0zQKHvmi_vg8GaTSqSpdprU",
+    "expire_date": "2025-08-07T14:56:09.704Z"
+  }
+},
+{
+  "model": "tasks.customuser",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$Qg5SsNbuZNulh2xiyJQAEx$dzDg86f8nQ4S0BNPZRSVyDBeDoHiTP+PhVMM8t4LxnA=",
+    "last_login": "2025-11-09T17:43:22.335Z",
+    "is_superuser": true,
+    "username": "admin",
+    "email": "admin@gmail.com",
+    "full_name": "",
+    "role": "",
+    "is_active": true,
+    "is_staff": true,
+    "date_joined": "2025-07-24T14:50:57.040Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "tasks.customuser",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$okRb0Eod0fw3JRlDwzRJqW$F9cAAcaBd/hATfoJ8zDdHDDRWIGDlfJ1Kjd8fOf4V+o=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "supermanager",
+    "email": "supermanager@gmail.com",
+    "full_name": "Lekashri",
+    "role": "supermanager",
+    "is_active": true,
+    "is_staff": false,
+    "date_joined": "2025-07-24T14:56:35Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "tasks.customuser",
+  "pk": 26,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$iRqP3kwp0vNdueYclzF7ER$TRkaabfu5WyuA0vIORk3Crhso7y2EerRGzhcLErEUeE=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "gabriella",
+    "email": "gabriella@gmail.com",
+    "full_name": "Gabriella Johnson",
+    "role": "manager",
+    "is_active": true,
+    "is_staff": false,
+    "date_joined": "2025-07-28T02:54:31Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "tasks.customuser",
+  "pk": 27,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$XGN2uueMCpXkqAvednGVll$Bq8nUvwTgw1K0wMR4zWwjfCglmkIa3NoSpgmp4XeJnQ=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "employee",
+    "email": "employee@gmail.com",
+    "full_name": "John Deo",
+    "role": "employee",
+    "is_active": true,
+    "is_staff": false,
+    "date_joined": "2025-07-28T02:55:18Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "tasks.customuser",
+  "pk": 28,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$d4Ya5ugUJH2QfKb87SsbBn$kNGbIYNHNARz238HY7eq/W4GioRMO+uwIn2UCjm9ALc=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "alexander",
+    "email": "alexander@gmail.com",
+    "full_name": "Alexander",
+    "role": "employee",
+    "is_active": true,
+    "is_staff": false,
+    "date_joined": "2025-07-28T02:55:54Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "tasks.customuser",
+  "pk": 29,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$KyJiz1gYD5OEFtvXKw0y1x$n59Ggv1RWe0v/FMRgKy4JR7IpXdavrr9Te5/8IKI/X4=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "david",
+    "email": "david@gmail.com",
+    "full_name": "David",
+    "role": "employee",
+    "is_active": true,
+    "is_staff": false,
+    "date_joined": "2025-07-28T02:56:43Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "tasks.customuser",
+  "pk": 30,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$OhkSZld5TnSp0Y54tNlbOI$veWRhUCX4IirPdn25xMdyZKpzYC+2f5VRlOVBRva0e8=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "manager",
+    "email": "manager@gmail.com",
+    "full_name": "Dhepika",
+    "role": "manager",
+    "is_active": true,
+    "is_staff": false,
+    "date_joined": "2025-07-28T02:57:29Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "tasks.project",
+  "pk": 48,
+  "fields": {
+    "name": "Website Redesign",
+    "description": "Redesign the corporate website to improve UI/UX and performance.",
+    "created_by": 2,
+    "assigned_to": 30,
+    "created_at": "2025-07-29T17:23:39.924Z",
+    "deadline": "2025-08-01",
+    "updated_at": "2025-07-29T17:23:39.924Z"
+  }
+},
+{
+  "model": "tasks.project",
+  "pk": 49,
+  "fields": {
+    "name": "Employee Onboarding System",
+    "description": "Build a portal to manage onboarding new hires.",
+    "created_by": 2,
+    "assigned_to": 26,
+    "created_at": "2025-07-29T17:28:43.178Z",
+    "deadline": "2025-07-29",
+    "updated_at": "2025-07-29T17:28:43.178Z"
+  }
+},
+{
+  "model": "tasks.project",
+  "pk": 50,
+  "fields": {
+    "name": "Mobile App Development",
+    "description": "Develop a task tracking mobile app (iOS & Android).",
+    "created_by": 2,
+    "assigned_to": 30,
+    "created_at": "2025-07-29T17:33:50.797Z",
+    "deadline": null,
+    "updated_at": "2025-07-29T17:33:50.797Z"
+  }
+},
+{
+  "model": "tasks.project",
+  "pk": 51,
+  "fields": {
+    "name": "Inventory Management System",
+    "description": "Track stock levels, purchases, and deliveries.",
+    "created_by": 2,
+    "assigned_to": 26,
+    "created_at": "2025-07-29T17:37:19.182Z",
+    "deadline": "2025-08-01",
+    "updated_at": "2025-07-29T17:37:19.182Z"
+  }
+},
+{
+  "model": "tasks.project",
+  "pk": 52,
+  "fields": {
+    "name": "Feedback Collection Portal",
+    "description": "Platform to collect, store, and analyze customer feedback.",
+    "created_by": 2,
+    "assigned_to": 26,
+    "created_at": "2025-07-29T17:41:42.784Z",
+    "deadline": null,
+    "updated_at": "2025-07-29T17:41:42.784Z"
+  }
+},
+{
+  "model": "tasks.project",
+  "pk": 53,
+  "fields": {
+    "name": "Internal Chat System",
+    "description": "Real-time chat for team communication.",
+    "created_by": 2,
+    "assigned_to": 30,
+    "created_at": "2025-07-29T17:46:48.147Z",
+    "deadline": "2025-08-05",
+    "updated_at": "2025-07-29T17:46:48.147Z"
+  }
+},
+{
+  "model": "tasks.project",
+  "pk": 54,
+  "fields": {
+    "name": "Project Analytics Dashboard",
+    "description": "Dashboard to monitor project metrics and task progress.",
+    "created_by": 2,
+    "assigned_to": 30,
+    "created_at": "2025-07-29T17:51:35.650Z",
+    "deadline": null,
+    "updated_at": "2025-07-29T17:51:35.650Z"
+  }
+},
+{
+  "model": "tasks.project",
+  "pk": 55,
+  "fields": {
+    "name": "Bug Tracker",
+    "description": "Track software bugs and assign them to developers.",
+    "created_by": 2,
+    "assigned_to": 26,
+    "created_at": "2025-07-29T17:54:30.538Z",
+    "deadline": "2025-08-08",
+    "updated_at": "2025-07-30T03:02:42.785Z"
+  }
+},
+{
+  "model": "tasks.project",
+  "pk": 56,
+  "fields": {
+    "name": "Expense Tracker",
+    "description": "Manage and visualize company expenses.",
+    "created_by": 2,
+    "assigned_to": 30,
+    "created_at": "2025-07-29T18:01:01.090Z",
+    "deadline": "2025-08-09",
+    "updated_at": "2025-07-29T18:01:01.090Z"
+  }
+},
+{
+  "model": "tasks.project",
+  "pk": 57,
+  "fields": {
+    "name": "LMS (Learning Management System)",
+    "description": "Platform for employees to take and manage courses.",
+    "created_by": 2,
+    "assigned_to": 26,
+    "created_at": "2025-07-29T18:05:44.603Z",
+    "deadline": "2025-08-09",
+    "updated_at": "2025-07-29T18:05:44.603Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 119,
+  "fields": {
+    "title": "Design Homepage",
+    "description": "Create layout and visual mockups.",
+    "project": 48,
+    "assigned_by": 2,
+    "assigned_to": 29,
+    "status": "pending",
+    "created_at": "2025-07-29T17:24:40.548Z",
+    "due_date": "2025-07-31",
+    "updated_at": "2025-07-29T17:24:40.550Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 120,
+  "fields": {
+    "title": "Revamp Navigation Bar",
+    "description": "Implement a modern responsive navbar.",
+    "project": 48,
+    "assigned_by": 2,
+    "assigned_to": 28,
+    "status": "in_progress",
+    "created_at": "2025-07-29T17:25:54.754Z",
+    "due_date": "2025-07-31",
+    "updated_at": "2025-07-29T17:25:54.754Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 121,
+  "fields": {
+    "title": "Migrate to React",
+    "description": "Convert static HTML to a React-based app.",
+    "project": 48,
+    "assigned_by": 2,
+    "assigned_to": 27,
+    "status": "completed",
+    "created_at": "2025-07-29T17:26:31.918Z",
+    "due_date": "2025-07-31",
+    "updated_at": "2025-07-29T17:26:31.918Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 122,
+  "fields": {
+    "title": "SEO Optimization",
+    "description": "Improve meta tags, alt text, and site speed.",
+    "project": 48,
+    "assigned_by": 2,
+    "assigned_to": 29,
+    "status": "pending",
+    "created_at": "2025-07-29T17:27:18.597Z",
+    "due_date": "2025-07-10",
+    "updated_at": "2025-07-29T17:27:50.206Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 123,
+  "fields": {
+    "title": "Create Employee Form",
+    "description": "Capture name, email, joining date, etc.",
+    "project": 49,
+    "assigned_by": 2,
+    "assigned_to": 28,
+    "status": "completed",
+    "created_at": "2025-07-29T17:30:33.439Z",
+    "due_date": null,
+    "updated_at": "2025-07-29T17:50:46.834Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 124,
+  "fields": {
+    "title": "Setup Email Notifications",
+    "description": "Send welcome email to new joiners.",
+    "project": 49,
+    "assigned_by": 2,
+    "assigned_to": 27,
+    "status": "completed",
+    "created_at": "2025-07-29T17:31:19.887Z",
+    "due_date": "2025-07-31",
+    "updated_at": "2025-07-29T17:49:30.472Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 125,
+  "fields": {
+    "title": "Document Upload Module",
+    "description": "Allow HR to upload policy PDFs.",
+    "project": 49,
+    "assigned_by": 2,
+    "assigned_to": 29,
+    "status": "completed",
+    "created_at": "2025-07-29T17:32:21.583Z",
+    "due_date": "2025-07-31",
+    "updated_at": "2025-07-29T17:50:02.806Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 126,
+  "fields": {
+    "title": "Assign Buddy Feature",
+    "description": "Auto-assign onboarding buddy.",
+    "project": 49,
+    "assigned_by": 2,
+    "assigned_to": 28,
+    "status": "completed",
+    "created_at": "2025-07-29T17:33:05.698Z",
+    "due_date": "2025-07-31",
+    "updated_at": "2025-07-29T17:33:05.698Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 127,
+  "fields": {
+    "title": "Create Login Screen",
+    "description": "Basic auth with JWT tokens.",
+    "project": 50,
+    "assigned_by": 2,
+    "assigned_to": 29,
+    "status": "pending",
+    "created_at": "2025-07-29T17:34:42.859Z",
+    "due_date": "2025-08-30",
+    "updated_at": "2025-07-30T03:11:57.651Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 128,
+  "fields": {
+    "title": "Task List View",
+    "description": "Display assigned tasks with status filters.",
+    "project": 50,
+    "assigned_by": 2,
+    "assigned_to": 27,
+    "status": "pending",
+    "created_at": "2025-07-29T17:35:32.122Z",
+    "due_date": null,
+    "updated_at": "2025-07-29T17:35:32.122Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 129,
+  "fields": {
+    "title": "Push Notification Setup",
+    "description": "Notify users of upcoming deadlines.",
+    "project": 50,
+    "assigned_by": 2,
+    "assigned_to": 29,
+    "status": "in_progress",
+    "created_at": "2025-07-29T17:36:09.221Z",
+    "due_date": null,
+    "updated_at": "2025-07-29T17:36:09.221Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 130,
+  "fields": {
+    "title": "Offline Mode Support",
+    "description": "Enable task access without internet.",
+    "project": 50,
+    "assigned_by": 2,
+    "assigned_to": 28,
+    "status": "completed",
+    "created_at": "2025-07-29T17:36:44.950Z",
+    "due_date": null,
+    "updated_at": "2025-07-29T19:06:40.181Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 131,
+  "fields": {
+    "title": "Add Product Module",
+    "description": "Create UI to add/edit inventory.",
+    "project": 51,
+    "assigned_by": 2,
+    "assigned_to": 29,
+    "status": "in_progress",
+    "created_at": "2025-07-29T17:38:46.797Z",
+    "due_date": "2025-07-10",
+    "updated_at": "2025-07-29T17:58:17.429Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 132,
+  "fields": {
+    "title": "Low Stock Alert",
+    "description": "Notify admin when stock is below threshold.",
+    "project": 51,
+    "assigned_by": 2,
+    "assigned_to": 27,
+    "status": "in_progress",
+    "created_at": "2025-07-29T17:39:28.174Z",
+    "due_date": null,
+    "updated_at": "2025-07-29T18:30:25.780Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 133,
+  "fields": {
+    "title": "Generate Purchase Orders",
+    "description": "Export order as PDF or CSV.",
+    "project": 51,
+    "assigned_by": 2,
+    "assigned_to": 29,
+    "status": "pending",
+    "created_at": "2025-07-29T17:40:14.921Z",
+    "due_date": null,
+    "updated_at": "2025-07-31T02:55:22.540Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 134,
+  "fields": {
+    "title": "Supplier Management",
+    "description": "Add and link suppliers to products.",
+    "project": 51,
+    "assigned_by": 2,
+    "assigned_to": 27,
+    "status": "pending",
+    "created_at": "2025-07-29T17:41:07Z",
+    "due_date": "2025-07-06",
+    "updated_at": "2025-07-31T02:54:51.676Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 135,
+  "fields": {
+    "title": "Create Feedback Form",
+    "description": "Allow users to rate and review services.",
+    "project": 52,
+    "assigned_by": 2,
+    "assigned_to": 29,
+    "status": "completed",
+    "created_at": "2025-07-29T17:42:30.464Z",
+    "due_date": "2025-07-30",
+    "updated_at": "2025-07-29T17:42:30.464Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 136,
+  "fields": {
+    "title": "Star Rating Integration",
+    "description": "Add 5-star rating UI component.",
+    "project": 52,
+    "assigned_by": 2,
+    "assigned_to": 27,
+    "status": "in_progress",
+    "created_at": "2025-07-29T17:43:10Z",
+    "due_date": "2025-08-31",
+    "updated_at": "2025-07-31T03:04:47.526Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 137,
+  "fields": {
+    "title": "Display Reviews in Admin Pane",
+    "description": "Sorted by latest.",
+    "project": 52,
+    "assigned_by": 2,
+    "assigned_to": 29,
+    "status": "completed",
+    "created_at": "2025-07-29T17:44:18.248Z",
+    "due_date": "2025-07-31",
+    "updated_at": "2025-07-29T17:44:18.248Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 138,
+  "fields": {
+    "title": "Export to Excel Feature",
+    "description": "Download all feedback for analysis.",
+    "project": 52,
+    "assigned_by": 2,
+    "assigned_to": 28,
+    "status": "in_progress",
+    "created_at": "2025-07-29T17:44:55.923Z",
+    "due_date": null,
+    "updated_at": "2025-07-29T17:44:55.923Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 140,
+  "fields": {
+    "title": "Integrate Chart.js",
+    "description": "Show bar and pie charts of tasks.",
+    "project": 54,
+    "assigned_by": 2,
+    "assigned_to": 27,
+    "status": "completed",
+    "created_at": "2025-07-29T17:52:26.732Z",
+    "due_date": null,
+    "updated_at": "2025-07-29T17:52:26.732Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 141,
+  "fields": {
+    "title": "Add Filter by Date/Project",
+    "description": "Allow timeline filtering.",
+    "project": 54,
+    "assigned_by": 2,
+    "assigned_to": 27,
+    "status": "completed",
+    "created_at": "2025-07-29T17:53:00.794Z",
+    "due_date": null,
+    "updated_at": "2025-07-29T17:53:00.794Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 142,
+  "fields": {
+    "title": "User Contribution Widget",
+    "description": "Show hours logged by users.",
+    "project": 54,
+    "assigned_by": 2,
+    "assigned_to": 29,
+    "status": "completed",
+    "created_at": "2025-07-29T17:53:35.052Z",
+    "due_date": null,
+    "updated_at": "2025-07-29T17:53:35.052Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 143,
+  "fields": {
+    "title": "Create Bug Report Form",
+    "description": "Title, description, severity.",
+    "project": 55,
+    "assigned_by": 2,
+    "assigned_to": 28,
+    "status": "in_progress",
+    "created_at": "2025-07-29T17:55:14.519Z",
+    "due_date": "2025-07-29",
+    "updated_at": "2025-07-29T17:55:14.519Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 144,
+  "fields": {
+    "title": "Assign Bug to Developer",
+    "description": "Dropdown with active users.",
+    "project": 55,
+    "assigned_by": 2,
+    "assigned_to": 28,
+    "status": "completed",
+    "created_at": "2025-07-29T17:55:52.250Z",
+    "due_date": null,
+    "updated_at": "2025-07-29T17:55:52.250Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 145,
+  "fields": {
+    "title": "Filter by Severity",
+    "description": "Critical, Major, Minor.",
+    "project": 55,
+    "assigned_by": 2,
+    "assigned_to": 27,
+    "status": "in_progress",
+    "created_at": "2025-07-29T17:56:39.010Z",
+    "due_date": null,
+    "updated_at": "2025-07-29T18:28:15.242Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 146,
+  "fields": {
+    "title": "Add New Expense Form",
+    "description": "Fields for amount, category, and date.",
+    "project": 56,
+    "assigned_by": 2,
+    "assigned_to": 28,
+    "status": "completed",
+    "created_at": "2025-07-29T18:01:35.347Z",
+    "due_date": "2025-07-30",
+    "updated_at": "2025-07-30T02:59:37.487Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 147,
+  "fields": {
+    "title": "Monthly Bar Chart",
+    "description": "Visualize spending per month.",
+    "project": 56,
+    "assigned_by": 2,
+    "assigned_to": 27,
+    "status": "completed",
+    "created_at": "2025-07-29T18:02:01.949Z",
+    "due_date": null,
+    "updated_at": "2025-07-29T18:02:01.949Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 148,
+  "fields": {
+    "title": "Filter by Category",
+    "description": "Travel, Food, Equipment.",
+    "project": 56,
+    "assigned_by": 2,
+    "assigned_to": 29,
+    "status": "pending",
+    "created_at": "2025-07-29T18:02:47.842Z",
+    "due_date": "2025-07-01",
+    "updated_at": "2025-07-30T03:12:28.586Z"
+  }
+},
+{
+  "model": "tasks.task",
+  "pk": 149,
+  "fields": {
+    "title": "Export Statement",
+    "description": "PDF of expenses for selected month.",
+    "project": 56,
+    "assigned_by": 2,
+    "assigned_to": 27,
+    "status": "pending",
+    "created_at": "2025-07-29T18:03:38Z",
+    "due_date": "2025-08-30",
+    "updated_at": "2025-07-30T03:11:18.516Z"
+  }
+}
+]

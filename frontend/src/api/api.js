@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 // ========== CRITICAL FIX: Hardcode the URL ==========
-const API_BASE_URL = "https://task-flow-deployment.onrender.com/api";
+const API_BASE_URL = "https://task-flow-deployment.onrender.com/api/";
+
 
 
 console.log('=== API CONFIGURATION ===');

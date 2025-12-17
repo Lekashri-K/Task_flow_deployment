@@ -25,55 +25,48 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+
 @method_decorator(csrf_exempt, name='dispatch')
 class LoginView(APIView):
-    permission_classes = []  # Allow anyone to access
+    permission_classes = []  # No authentication required
     
     def options(self, request, *args, **kwargs):
-        """Handle OPTIONS requests for CORS preflight"""
+        """Explicitly handle OPTIONS for CORS"""
         from django.http import HttpResponse
         response = HttpResponse()
         response['Access-Control-Allow-Origin'] = '*'
         response['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
         response['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
-        response['Access-Control-Max-Age'] = '86400'
         return response
     
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
         
-        print(f"Login attempt for: {username}")
+        print(f"Login attempt: {username}")
         
         user = authenticate(username=username, password=password)
         
         if not user:
-            print(f"Authentication failed for: {username}")
-            response = Response(
-                {'detail': 'Invalid credentials'}, 
+            return Response(
+                {'error': 'Invalid credentials'},
                 status=status.HTTP_401_UNAUTHORIZED
             )
-            response['Access-Control-Allow-Origin'] = '*'
-            return response
         
         refresh = RefreshToken.for_user(user)
         
-        response_data = {
+        return Response({
             'user': {
                 'id': user.id,
                 'username': user.username,
-                'email': user.email if hasattr(user, 'email') else '',
-                'role': user.role if hasattr(user, 'role') else 'user',
-                'full_name': user.full_name if hasattr(user, 'full_name') else user.username,
+                'email': user.email,
+                'role': user.role,
             },
             'refresh': str(refresh),
             'access': str(refresh.access_token),
-        }
-        
-        print(f"Login successful for: {username}")
-        response = Response(response_data)
-        response['Access-Control-Allow-Origin'] = '*'
-        return response
+        })
 class SuperManagerDashboardStats(APIView):
     permission_classes = [IsAuthenticated]
 

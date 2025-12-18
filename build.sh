@@ -1,17 +1,13 @@
 #!/bin/bash
-
-# Exit on any error
 set -e
 
 echo "=== STARTING CLEAN BUILD ==="
 
-# 1. Enter frontend and remove old build artifacts
+# Step 1: Fix package.json with ALL required dependencies
+echo "1. Fixing package.json..."
 cd frontend
 rm -rf build
-rm -rf node_modules
 
-# 2. Re-create package.json to ensure homepage is correct
-echo "Creating clean package.json..."
 cat > package.json << 'EOF'
 {
   "name": "frontend",
@@ -21,9 +17,14 @@ cat > package.json << 'EOF'
   "dependencies": {
     "axios": "^1.6.0",
     "bootstrap": "^5.3.0",
+    "bootstrap-icons": "^1.11.0",
+    "chart.js": "^4.4.0",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.10.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.20.0",
+    "react-icons": "^5.0.0",
+    "react-router-dom": "^6.22.0",
     "react-scripts": "5.0.1"
   },
   "scripts": {
@@ -32,22 +33,23 @@ cat > package.json << 'EOF'
 }
 EOF
 
-# 3. Install and Build React
+# Step 2: Install and Build
+echo "2. Installing and Building React..."
 npm install
 CI=false npm run build
-
-# 4. Prepare the folder for Django
 cd ..
-rm -rf frontend_build
-mkdir -p frontend_build
-cp -r frontend/build/* frontend_build/
 
-# 5. Setup Backend
+# Step 3: Move Build to Backend
+echo "3. Moving build files..."
+rm -rf backend/frontend_build
+mkdir -p backend/frontend_build
+cp -r frontend/build/* backend/frontend_build/
+
+# Step 4: Django Setup
+echo "4. Setting up Django..."
 cd backend
 pip install -r requirements.txt
-
-# This is the most important part for your MIME error fix
 python manage.py collectstatic --noinput
 python manage.py migrate --noinput
 
-echo "=== BUILD FINISHED SUCCESSFULLY ==="
+echo "=== BUILD COMPLETE ==="

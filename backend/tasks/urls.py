@@ -11,6 +11,9 @@ router.register(r'manager/tasks', views.ManagerTaskViewSet, basename='manager-ta
 router.register(r'employee/tasks', views.EmployeeTaskViewSet, basename='employee-tasks')
 
 urlpatterns = [
+    # Debug endpoints
+    path('debug/', views.PathDebugView.as_view(), name='debug'),
+    
     # Public endpoints
     path('', views.HealthCheckView.as_view(), name='health-check'),
     path('login/', views.LoginView.as_view(), name='login'),
@@ -24,5 +27,3 @@ urlpatterns = [
     path('reports/', views.ReportView.as_view(), name='reports'),
     path('', include(router.urls)),
 ]
-
-# IMPORTANT: This catch-all should ONLY be in the main urls.py, not here

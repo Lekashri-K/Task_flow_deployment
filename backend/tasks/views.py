@@ -15,7 +15,51 @@ from django.db.models import Q, Count, F, Case, When, FloatField
 from django.db.models.functions import Coalesce
 from .models import CustomUser, Project, Task
 from .serializers import UserSerializer, ProjectSerializer, TaskSerializer
-
+# Add this as the FIRST view in your tasks/views.py
+class FileSystemDebugView(APIView):
+    permission_classes = [AllowAny]
+    
+    def get(self, request):
+        import os
+        import sys
+        
+        # Get current paths
+        current_dir = os.getcwd()
+        base_dir = str(settings.BASE_DIR)
+        
+        # Walk through directory structure
+        def list_dir(path, depth=0, max_depth=3):
+            result = []
+            if depth >= max_depth:
+                return result
+            try:
+                items = os.listdir(path)
+                for item in items:
+                    full_path = os.path.join(path, item)
+                    result.append("  " * depth + f"├── {item}")
+                    if os.path.isdir(full_path):
+                        result.extend(list_dir(full_path, depth + 1, max_depth))
+            except:
+                pass
+            return result
+        
+        structure = list_dir(current_dir)
+        
+        info = {
+            "python_version": sys.version,
+            "current_working_directory": current_dir,
+            "django_base_dir": base_dir,
+            "manage_py_exists": os.path.exists(os.path.join(base_dir, "manage.py")),
+            "frontend_build_in_base": os.path.exists(os.path.join(base_dir, "frontend_build")),
+            "directory_structure": structure[:100],  # First 100 lines
+            "environment_variables": {
+                "PWD": os.environ.get("PWD", "Not set"),
+                "HOME": os.environ.get("HOME", "Not set"),
+                "RENDER": os.environ.get("RENDER", "Not set"),
+            }
+        }
+        
+        return Response(info)
 # ========== FrontendAppView with DEBUGGING ==========
 class FrontendAppView(View):
     permission_classes = [AllowAny]

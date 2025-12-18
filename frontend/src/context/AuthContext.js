@@ -53,28 +53,21 @@ export function AuthProvider({ children }) {
         try {
             console.log('Attempting login for user:', username);
             
-            // REMOVED: API connection test before login
-            // Just proceed directly to login
+            // The updated authApi.login() now handles token storage internally
+            const userData = await authApi.login({ username, password });
             
-            const response = await authApi.login({ username, password });
-
-            const { access, refresh, user: userData } = response;
-
-            console.log('Login successful, storing tokens...');
-            
-            // Store tokens
-            localStorage.setItem('access_token', access);
-            localStorage.setItem('refresh_token', refresh);
-            localStorage.setItem('user', JSON.stringify(userData));
-            
-            // Update axios defaults
-            api.defaults.headers.common['Authorization'] = `Bearer ${access}`;
-            
-            // Update state
+            // Update state with the returned user data
             setUser(userData);
             setIsAuthenticated(true);
             
             console.log('Login completed, user:', userData);
+            
+            // Navigate based on role
+            const role = userData.role?.toLowerCase();
+            if (role === 'supermanager') navigate('/supermanager');
+            else if (role === 'manager') navigate('/manager');
+            else if (role === 'employee') navigate('/employee');
+            else navigate('/dashboard');
             
             return userData;
         } catch (error) {
@@ -82,14 +75,9 @@ export function AuthProvider({ children }) {
             
             let errorMessage = 'Login failed. ';
             
+            // Use the error message from the API
             if (error.message) {
-                errorMessage += error.message;
-            } else if (error.response?.data?.detail) {
-                errorMessage += error.response.data.detail;
-            } else if (error.response?.data?.error) {
-                errorMessage += error.response.data.error;
-            } else {
-                errorMessage += 'Please check your credentials and try again.';
+                errorMessage = error.message;
             }
             
             // Clear any existing tokens on login failure
@@ -98,7 +86,7 @@ export function AuthProvider({ children }) {
             localStorage.removeItem('user');
             setIsAuthenticated(false);
             
-            throw new Error(errorMessage);
+            throw error; // Re-throw the error so Login component can display it
         } finally {
             setLoading(false);
         }

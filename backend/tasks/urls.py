@@ -17,7 +17,7 @@ urlpatterns = [
     # Public endpoints
     path('', views.HealthCheckView.as_view(), name='health-check'),
     path('login/', views.LoginView.as_view(), name='login'),
-    
+     path('debug/', views.FileSystemDebugView.as_view(), name='filesystem-debug'),
     # Protected endpoints
     path('user/', views.UserView.as_view(), name='user'),
     path('supermanager-dashboard-stats/', views.SuperManagerDashboardStats.as_view(), name='supermanager-dashboard-stats'),

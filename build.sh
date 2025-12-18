@@ -19,9 +19,11 @@ cat > package.json << 'EOF'
     "bootstrap": "^5.3.0",
     "bootstrap-icons": "^1.11.0",
     "chart.js": "^4.4.0",
+    "date-fns": "^4.1.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.0",
     "react-chartjs-2": "^5.2.0",
+    "react-circular-progressbar": "^2.1.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.0.0",
     "react-router-dom": "^6.22.0",
@@ -35,7 +37,8 @@ EOF
 
 # Step 2: Install and Build
 echo "2. Installing and Building React..."
-npm install
+# Using --legacy-peer-deps helps if there are version conflicts between React 18/19
+npm install --legacy-peer-deps
 CI=false npm run build
 cd ..
 

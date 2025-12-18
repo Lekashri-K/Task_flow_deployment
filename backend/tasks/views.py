@@ -1,5 +1,3 @@
-# tasks/views.py - UPDATED VERSION
-
 import os
 from django.views.generic import View
 from django.http import HttpResponse
@@ -17,25 +15,8 @@ from django.db.models import Q, Count, F, Case, When, FloatField
 from django.db.models.functions import Coalesce
 from .models import CustomUser, Project, Task
 from .serializers import UserSerializer, ProjectSerializer, TaskSerializer
-# Add this NEW class at the TOP of your views.py file (after imports)
-class HealthCheckView(APIView):
-    """Public health check endpoint - no authentication required"""
-    permission_classes = [AllowAny]
-    
-    def get(self, request):
-        return Response({
-            'status': 'healthy',
-            'message': 'TaskFlow API is running',
-            'timestamp': timezone.now(),
-            'version': '1.0.0',
-            'endpoints': {
-                'login': '/api/login/',
-                'user_info': '/api/user/',
-                'health': '/api/'
-            }
-        })
 
-# MOVE FrontendAppView TO THE TOP to avoid circular imports
+# ========== NEW: FrontendAppView at the TOP to avoid circular imports ==========
 class FrontendAppView(View):
     def get(self, request, *args, **kwargs):
         try:
@@ -46,33 +27,20 @@ class FrontendAppView(View):
                 "index.html not found! Make sure your React build is inside 'frontend_build/' folder.",
                 status=501,
             )
-            # In tasks/views.py, ADD these TWO classes and update LoginView
 
-
-# Update ONLY the LoginView class (find it in your existing views.py)
-class LoginView(APIView):
-    permission_classes = [AllowAny]  # Make sure this line is there
+# ========== NEW: HealthCheckView ==========
+class HealthCheckView(APIView):
+    permission_classes = [AllowAny]
     
-    def post(self, request):
-        username = request.data.get('username')
-        password = request.data.get('password')
-
-        user = authenticate(username=username, password=password)
-
-        if not user:
-            return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-
-        refresh = RefreshToken.for_user(user)
+    def get(self, request):
         return Response({
-            'user': UserSerializer(user).data,
-            'refresh': str(refresh),
-            'access': str(refresh.access_token),
+            'status': 'healthy',
+            'message': 'TaskFlow API is running',
+            'timestamp': timezone.now(),
+            'version': '1.0.0'
         })
 
-# KEEP ALL YOUR OTHER VIEW CLASSES EXACTLY AS THEY ARE
-# Don't change SuperManagerDashboardStats, SuperManagerUserViewSet, etc.
-
-# Now the rest of your views can stay as they are...
+# ========== KEEP YOUR EXISTING VIEWS ==========
 class SuperManagerDashboardStats(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -90,6 +58,24 @@ class SuperManagerDashboardStats(APIView):
         return Response(stats)
 
 
+class LoginView(APIView):
+    permission_classes = [AllowAny]
+    
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+
+        user = authenticate(username=username, password=password)
+
+        if not user:
+            return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            'user': UserSerializer(user).data,
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        })
 
 
 class UserView(APIView):

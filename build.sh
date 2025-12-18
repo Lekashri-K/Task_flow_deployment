@@ -1,55 +1,53 @@
 #!/bin/bash
 
-echo "=== FORCING FRESH BUILD - NO CACHE ==="
+# Exit on any error
+set -e
 
-# 1. Clean EVERYTHING
-rm -rf frontend/build
-rm -rf frontend/node_modules/.cache
-rm -rf /opt/render/project/src/frontend_build
-rm -rf backend/staticfiles
+echo "=== STARTING CLEAN BUILD ==="
 
-# 2. Build React with cache busting
+# 1. Enter frontend and remove old build artifacts
 cd frontend
+rm -rf build
+rm -rf node_modules
 
-# Create unique build ID
-BUILD_ID=$(date +%s)
-echo "BUILD_ID=$BUILD_ID" > .env.production
-echo "REACT_APP_BUILD_ID=$BUILD_ID" >> .env.production
-echo "REACT_APP_API_URL=https://task-flow-deployment.onrender.com/api/" >> .env.production
-echo "PUBLIC_URL=." >> .env.production
+# 2. Re-create package.json to ensure homepage is correct
+echo "Creating clean package.json..."
+cat > package.json << 'EOF'
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "/",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "bootstrap": "^5.3.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.0",
+    "react-scripts": "5.0.1"
+  },
+  "scripts": {
+    "build": "react-scripts build"
+  }
+}
+EOF
 
-# Force fresh npm install
-rm -rf node_modules package-lock.json
-npm cache clean --force
+# 3. Install and Build React
+npm install
+CI=false npm run build
 
-# Install fresh
-npm install --legacy-peer-deps
-
-# Build with INVALIDATE flag
-CI=false GENERATE_SOURCEMAP=false npm run build
-
-echo "Build completed with ID: $BUILD_ID"
-ls -la build/
-
-# 3. Copy to frontend_build with NEW structure
+# 4. Prepare the folder for Django
 cd ..
-mkdir -p /opt/render/project/src/frontend_build
-cp -r frontend/build/* /opt/render/project/src/frontend_build/
+rm -rf frontend_build
+mkdir -p frontend_build
+cp -r frontend/build/* frontend_build/
 
-# 4. Create version.txt for cache busting
-echo "version=$BUILD_ID" > /opt/render/project/src/frontend_build/version.txt
-echo "timestamp=$(date)" >> /opt/render/project/src/frontend_build/version.txt
-
-# 5. Setup Django
+# 5. Setup Backend
 cd backend
-
-# Skip problematic steps
-export DISABLE_COLLECTSTATIC=1
-
-# Simple install
 pip install -r requirements.txt
 
-# Minimal migrations
-python manage.py migrate --noinput 2>/dev/null || true
+# This is the most important part for your MIME error fix
+python manage.py collectstatic --noinput
+python manage.py migrate --noinput
 
-echo "=== BUILD COMPLETE ==="
+echo "=== BUILD FINISHED SUCCESSFULLY ==="

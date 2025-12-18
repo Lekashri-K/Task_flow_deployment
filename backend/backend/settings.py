@@ -1,19 +1,18 @@
+
 # import os
 # from pathlib import Path
 # from datetime import timedelta
 
 # # Build paths inside the project
-# # IMPORTANT: For your structure: main/backend/backend/settings.py
-# # BASE_DIR should be: /opt/render/project/src/backend (where manage.py is)
 # BASE_DIR = Path(__file__).resolve().parent.parent
 
-# print(f"BASE_DIR: {BASE_DIR}")
-# print(f"Current working directory: {os.getcwd()}")
-
 # # SECURITY
-# SECRET_KEY = os.environ.get('SECRET_KEY', 'fallback-secret-key')
+# SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-fallback-key-change-this')
 # DEBUG = os.environ.get('DEBUG', 'False') == 'True'
-# ALLOWED_HOSTS = ['*']
+
+# # On Render, specify your domain. 
+# # Using '*' is okay for testing but specific is better.
+# ALLOWED_HOSTS = ['task-flow-deployment.onrender.com', 'localhost', '127.0.0.1']
 
 # # Application definition
 # INSTALLED_APPS = [
@@ -27,11 +26,12 @@
 #     'rest_framework',
 #     'rest_framework_simplejwt',
 #     'corsheaders',
+#     'whitenoise.runserver_nostatic', # Optional: helps in local dev
 # ]
 
 # MIDDLEWARE = [
 #     'django.middleware.security.SecurityMiddleware',
-#     'whitenoise.middleware.WhiteNoiseMiddleware',
+#     'whitenoise.middleware.WhiteNoiseMiddleware',  # MUST be after SecurityMiddleware
 #     'corsheaders.middleware.CorsMiddleware',
 #     'django.contrib.sessions.middleware.SessionMiddleware',
 #     'django.middleware.common.CommonMiddleware',
@@ -43,10 +43,10 @@
 
 # ROOT_URLCONF = 'backend.urls'
 
-# # Templates
 # TEMPLATES = [
 #     {
 #         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+#         # Look for index.html in your build folder
 #         'DIRS': [os.path.join(BASE_DIR, 'frontend_build')],
 #         'APP_DIRS': True,
 #         'OPTIONS': {
@@ -61,7 +61,7 @@
 
 # WSGI_APPLICATION = 'backend.wsgi.application'
 
-# # Database
+# # Database (SQLite for demo/Render)
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -69,21 +69,12 @@
 #     }
 # }
 
-# # Password validation
-# AUTH_PASSWORD_VALIDATORS = [
-#     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
-#     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
-#     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
-#     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
-# ]
-
 # # Internationalization
 # LANGUAGE_CODE = 'en-us'
 # TIME_ZONE = 'UTC'
 # USE_I18N = True
 # USE_TZ = True
 
-# # Custom user model
 # AUTH_USER_MODEL = 'tasks.CustomUser'
 
 # # REST Framework
@@ -97,61 +88,55 @@
 #     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
 #     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 #     'ROTATE_REFRESH_TOKENS': False,
-#     'BLACKLIST_AFTER_ROTATION': True,
 #     'ALGORITHM': 'HS256',
 #     'SIGNING_KEY': SECRET_KEY,
-#     'VERIFYING_KEY': None,
 #     'AUTH_HEADER_TYPES': ('Bearer',),
-#     'USER_ID_FIELD': 'id',
-#     'USER_ID_CLAIM': 'user_id',
-#     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
 # }
 
-# # Authentication backends
-# AUTHENTICATION_BACKENDS = [
-#     'django.contrib.auth.backends.ModelBackend',
-# ]
-
-# # CORS
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:3000",
-#     "http://127.0.0.1:3000",
-#     "https://task-flow-deployment.onrender.com",
-# ]
+# # CORS - Allow everything for demo or restrict to your render URL
+# CORS_ALLOW_ALL_ORIGINS = True
 # CORS_ALLOW_CREDENTIALS = True
 
-# # Static files
+# # CSRF - Critical for Render login
+# CSRF_TRUSTED_ORIGINS = [
+#     "https://task-flow-deployment.onrender.com",
+# ]
+
+# # STATIC FILES CONFIGURATION
 # STATIC_URL = '/static/'
+
+# # 1. Where collectstatic will put all files for Render to serve
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# # 2. Where Django looks for additional static files (your React build)
 # STATICFILES_DIRS = [
 #     os.path.join(BASE_DIR, 'frontend_build', 'static'),
 # ]
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# # 3. Use WhiteNoise to serve compressed/cached files
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# # Default primary key
 # DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# # Security settings for production
+# # Security settings for Render production
 # if not DEBUG:
 #     SECURE_SSL_REDIRECT = True
 #     SESSION_COOKIE_SECURE = True
 #     CSRF_COOKIE_SECURE = True
-#     SECURE_BROWSER_XSS_FILTER = True
-#     SECURE_CONTENT_TYPE_NOSNIFF = True
 import os
 from pathlib import Path
 from datetime import timedelta
 
 # Build paths inside the project
+# This assumes settings.py is in backend/backend/settings.py
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-fallback-key-change-this')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-4uh2u-5nbjl$dldev*2z3e+o7*8+b+&km71#^@xmg8f!5auw*_')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-# On Render, specify your domain. 
-# Using '*' is okay for testing but specific is better.
-ALLOWED_HOSTS = ['task-flow-deployment.onrender.com', 'localhost', '127.0.0.1']
+# On Render, specify your domain for security
+ALLOWED_HOSTS = ['task-flow-deployment.onrender.com', 'localhost', '127.0.0.1', '*']
 
 # Application definition
 INSTALLED_APPS = [
@@ -165,12 +150,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
-    'whitenoise.runserver_nostatic', # Optional: helps in local dev
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # MUST be after SecurityMiddleware
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # MUST stay right here
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -185,7 +169,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # Look for index.html in your build folder
+        # Where index.html is located
         'DIRS': [os.path.join(BASE_DIR, 'frontend_build')],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -200,7 +184,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-# Database (SQLite for demo/Render)
+# Database (Using SQLite as per your request)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -208,13 +192,30 @@ DATABASES = {
     }
 }
 
+# Custom user model
+AUTH_USER_MODEL = 'tasks.CustomUser'
+
 # Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-AUTH_USER_MODEL = 'tasks.CustomUser'
+# Static files (CSS, JavaScript, Images)
+# This configuration is the fix for the MIME type error
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_DIRS = [
+    # This points to the static folder inside your React build
+    os.path.join(BASE_DIR, 'frontend_build', 'static'),
+]
+
+# Use WhiteNoise to serve compressed/cached static files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Fix for SPA (Single Page Application) routing
+WHITENOISE_INDEX_FILE = True
 
 # REST Framework
 REST_FRAMEWORK = {
@@ -232,33 +233,21 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-# CORS - Allow everything for demo or restrict to your render URL
+# CORS Settings
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
-# CSRF - Critical for Render login
+# CSRF Settings - Required for Django on Render (HTTPS)
 CSRF_TRUSTED_ORIGINS = [
     "https://task-flow-deployment.onrender.com",
 ]
 
-# STATIC FILES CONFIGURATION
-STATIC_URL = '/static/'
-
-# 1. Where collectstatic will put all files for Render to serve
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-# 2. Where Django looks for additional static files (your React build)
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'frontend_build', 'static'),
-]
-
-# 3. Use WhiteNoise to serve compressed/cached files
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Security settings for Render production
+# Production Security
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True

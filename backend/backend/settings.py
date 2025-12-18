@@ -1,20 +1,15 @@
-from pathlib import Path
 import os
+from pathlib import Path
 from datetime import timedelta
 
 # Build paths inside the project
-BASE_DIR = Path(__file__).resolve().parent.parent
+# BASE_DIR should be: /opt/render/project/src/backend (where manage.py is)
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # SECURITY
 SECRET_KEY = os.environ.get('SECRET_KEY', 'fallback-secret-key')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
-
-# Render-specific settings
-RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS = [RENDER_EXTERNAL_HOSTNAME, 'task-flow-deployment.onrender.com']
-else:
-    ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'task-flow-deployment.onrender.com']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
@@ -24,7 +19,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tasks',  # Your app
+    'tasks',
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
@@ -44,7 +39,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'backend.urls'
 
-# Templates - integrate React build
+# Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -60,14 +55,13 @@ TEMPLATES = [
     },
 ]
 
-# WSGI
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-# Database (SQLite for demo)
+# Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),  # Fixed path
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -88,15 +82,13 @@ USE_TZ = True
 # Custom user model
 AUTH_USER_MODEL = 'tasks.CustomUser'
 
+# REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
-    # REMOVE or COMMENT OUT the default permission classes
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ],
 }
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
@@ -116,56 +108,21 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-# CORS Configuration - IMPORTANT for Render
+# CORS
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "https://task-flow-deployment.onrender.com",
 ]
-
-# Allow credentials
 CORS_ALLOW_CREDENTIALS = True
 
-# For development/testing only - remove in production
-CORS_ALLOW_ALL_ORIGINS = False  # Changed to False for security
-
-# CORS settings for production
-CORS_ALLOW_METHODS = [
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
-]
-
-CORS_ALLOW_HEADERS = [
-    'accept',
-    'accept-encoding',
-    'authorization',
-    'content-type',
-    'dnt',
-    'origin',
-    'user-agent',
-    'x-csrftoken',
-    'x-requested-with',
-]
-
-# Static files - React build integration
+# Static files
 STATIC_URL = '/static/'
-
-# Ensure the frontend_build directory exists
-if os.path.exists(os.path.join(BASE_DIR, 'frontend_build', 'static')):
-    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'frontend_build', 'static')]
-else:
-    STATICFILES_DIRS = []
-
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'frontend_build', 'static'),
+]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# Media files (if needed)
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

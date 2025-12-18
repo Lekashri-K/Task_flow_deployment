@@ -16,31 +16,119 @@ from django.db.models.functions import Coalesce
 from .models import CustomUser, Project, Task
 from .serializers import UserSerializer, ProjectSerializer, TaskSerializer
 
-# ========== NEW: FrontendAppView at the TOP to avoid circular imports ==========
+# ========== FrontendAppView with DEBUGGING ==========
 class FrontendAppView(View):
+    permission_classes = [AllowAny]
+    
     def get(self, request, *args, **kwargs):
         try:
-            with open(os.path.join(settings.BASE_DIR, 'frontend_build', 'index.html')) as f:
-                return HttpResponse(f.read())
-        except FileNotFoundError:
+            # Try multiple paths to find index.html
+            possible_paths = [
+                os.path.join(settings.BASE_DIR, 'frontend_build', 'index.html'),
+                os.path.join(settings.BASE_DIR, '..', 'frontend_build', 'index.html'),
+                os.path.join(settings.BASE_DIR, '..', '..', 'frontend_build', 'index.html'),
+                '/opt/render/project/src/backend/frontend_build/index.html',
+                os.path.join(os.getcwd(), 'frontend_build', 'index.html'),
+            ]
+            
+            for path in possible_paths:
+                if os.path.exists(path):
+                    print(f"Found index.html at: {path}")
+                    with open(path, 'r', encoding='utf-8') as f:
+                        return HttpResponse(f.read())
+            
+            # If not found, show debug info
+            debug_info = f"""
+            <h3>index.html not found!</h3>
+            <p><strong>BASE_DIR:</strong> {settings.BASE_DIR}</p>
+            <p><strong>Current directory:</strong> {os.getcwd()}</p>
+            <p><strong>Paths checked:</strong></p>
+            <ul>
+            """
+            for path in possible_paths:
+                debug_info += f"<li>{path} - {os.path.exists(path)}</li>"
+            
+            debug_info += f"""
+            </ul>
+            <p><strong>Files in BASE_DIR:</strong></p>
+            <ul>
+            """
+            try:
+                files = os.listdir(settings.BASE_DIR)
+                for file in files:
+                    debug_info += f"<li>{file}</li>"
+            except Exception as e:
+                debug_info += f"<li>Error listing files: {e}</li>"
+            
+            debug_info += "</ul>"
+            return HttpResponse(debug_info, status=404)
+            
+        except Exception as e:
             return HttpResponse(
-                "index.html not found! Make sure your React build is inside 'frontend_build/' folder.",
-                status=501,
+                f"Error serving frontend: {str(e)}<br>"
+                f"BASE_DIR: {settings.BASE_DIR}",
+                status=500,
             )
 
-# ========== NEW: HealthCheckView ==========
+# ========== HealthCheckView with path info ==========
 class HealthCheckView(APIView):
     permission_classes = [AllowAny]
     
     def get(self, request):
+        import os
         return Response({
             'status': 'healthy',
             'message': 'TaskFlow API is running',
             'timestamp': timezone.now(),
-            'version': '1.0.0'
+            'version': '1.0.0',
+            'paths': {
+                'base_dir': str(settings.BASE_DIR),
+                'current_dir': os.getcwd(),
+                'frontend_build_exists': os.path.exists(os.path.join(settings.BASE_DIR, 'frontend_build')),
+                'frontend_index_exists': os.path.exists(os.path.join(settings.BASE_DIR, 'frontend_build', 'index.html')),
+            }
         })
 
-# ========== KEEP YOUR EXISTING VIEWS ==========
+# ========== Path Debug View ==========
+class PathDebugView(APIView):
+    permission_classes = [AllowAny]
+    
+    def get(self, request):
+        import os
+        import sys
+        
+        info = {
+            'python_version': sys.version,
+            'current_directory': os.getcwd(),
+            'base_directory': str(settings.BASE_DIR),
+            'frontend_build_path': os.path.join(settings.BASE_DIR, 'frontend_build'),
+            'frontend_build_exists': os.path.exists(os.path.join(settings.BASE_DIR, 'frontend_build')),
+            'files_in_current_dir': os.listdir('.'),
+            'files_in_base_dir': os.listdir(settings.BASE_DIR) if os.path.exists(settings.BASE_DIR) else [],
+            'environment': {
+                'DEBUG': settings.DEBUG,
+                'ALLOWED_HOSTS': settings.ALLOWED_HOSTS,
+            }
+        }
+        
+        # Check for frontend_build in parent directories
+        parent_dirs = []
+        current_path = settings.BASE_DIR
+        for i in range(3):
+            parent = os.path.dirname(current_path) if i > 0 else current_path
+            frontend_path = os.path.join(parent, 'frontend_build')
+            parent_dirs.append({
+                'path': frontend_path,
+                'exists': os.path.exists(frontend_path),
+                'has_index': os.path.exists(os.path.join(frontend_path, 'index.html')) if os.path.exists(frontend_path) else False
+            })
+            current_path = parent
+        
+        info['parent_directory_checks'] = parent_dirs
+        
+        return Response(info)
+
+# ========== SuperManagerDashboardStats ==========
 class SuperManagerDashboardStats(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -57,7 +145,7 @@ class SuperManagerDashboardStats(APIView):
         }
         return Response(stats)
 
-
+# ========== LoginView ==========
 class LoginView(APIView):
     permission_classes = [AllowAny]
     
@@ -77,7 +165,7 @@ class LoginView(APIView):
             'access': str(refresh.access_token),
         })
 
-
+# ========== UserView ==========
 class UserView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -85,7 +173,7 @@ class UserView(APIView):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
 
-
+# ========== SuperManagerUserViewSet ==========
 class SuperManagerUserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
@@ -104,7 +192,7 @@ class SuperManagerUserViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-
+# ========== SuperManagerProjectViewSet ==========
 class SuperManagerProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
@@ -131,7 +219,7 @@ class SuperManagerProjectViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-
+# ========== SuperManagerTaskViewSet ==========
 class SuperManagerTaskViewSet(viewsets.ModelViewSet):
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
@@ -158,7 +246,7 @@ class SuperManagerTaskViewSet(viewsets.ModelViewSet):
         context['request'] = self.request
         return context
 
-
+# ========== RecentActivityView ==========
 class RecentActivityView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -250,7 +338,7 @@ class RecentActivityView(APIView):
         activities.sort(key=lambda x: x['timestamp'], reverse=True)
         return Response(activities[:limit])
 
-
+# ========== ReportView ==========
 class ReportView(APIView):
     def get(self, request):
         project_id = request.query_params.get('project')
@@ -318,7 +406,7 @@ class ReportView(APIView):
         
         return Response(response_data)
 
-
+# ========== ManagerProjectViewSet ==========
 class ManagerProjectViewSet(viewsets.ModelViewSet):
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated]
@@ -328,7 +416,7 @@ class ManagerProjectViewSet(viewsets.ModelViewSet):
             return Project.objects.filter(assigned_to=self.request.user)
         return Project.objects.none()
 
-
+# ========== ManagerTaskViewSet ==========
 class ManagerTaskViewSet(viewsets.ModelViewSet):
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
@@ -349,7 +437,7 @@ class ManagerTaskViewSet(viewsets.ModelViewSet):
             return Task.objects.filter(project__in=manager_projects)
         return Task.objects.none()
 
-
+# ========== ManagerEmployeeListView ==========
 class ManagerEmployeeListView(generics.ListAPIView):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
@@ -359,7 +447,7 @@ class ManagerEmployeeListView(generics.ListAPIView):
             return CustomUser.objects.filter(role='employee')
         return CustomUser.objects.none()
 
-
+# ========== ManagerDashboardStats ==========
 class ManagerDashboardStats(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -384,7 +472,7 @@ class ManagerDashboardStats(APIView):
 
         return Response(stats)
 
-
+# ========== EmployeeTaskViewSet ==========
 class EmployeeTaskViewSet(viewsets.ModelViewSet):
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]

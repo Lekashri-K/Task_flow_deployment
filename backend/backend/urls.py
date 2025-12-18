@@ -9,7 +9,7 @@ urlpatterns = [
     path('api/', include('tasks.urls')),  # All API endpoints
     
     # Catch-all route for React frontend - MUST BE LAST
-    re_path(r'^(?!admin|api).*$', FrontendAppView.as_view(), name='frontend'),
+    re_path(r'^.*$', FrontendAppView.as_view(), name='frontend'),
 ]
 
 if settings.DEBUG:

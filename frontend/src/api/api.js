@@ -2,11 +2,10 @@ import axios from 'axios';
 
 // Create axios instance with Render-specific configuration
 const getApiBaseUrl = () => {
-    // For production on Render
+    // Auto-detect environment
     if (window.location.hostname.includes('onrender.com')) {
         return window.location.origin + '/api/';
     }
-    // For local development
     return process.env.REACT_APP_API_URL || 'http://localhost:8000/api/';
 };
 
@@ -24,20 +23,16 @@ const authApi = {
     login: async (credentials) => {
         try {
             const apiUrl = getApiBaseUrl();
-            console.log('Making login request to:', `${apiUrl}login/`);
+            console.log('Login request to:', `${apiUrl}login/`);
             
             const response = await fetch(`${apiUrl}login/`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'same-origin',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(credentials)
             });
 
             const data = await response.json();
             console.log('Login response status:', response.status);
-            console.log('Login response data:', data);
 
             if (!response.ok) {
                 throw {
@@ -53,15 +48,12 @@ const authApi = {
         } catch (error) {
             console.error('Login error:', error);
             
-            // Enhanced error handling
             if (error.response) {
                 console.error('Response error:', error.response.data);
                 console.error('Status:', error.response.status);
             } else if (error.request) {
-                console.error('No response received:', error.request);
+                console.error('No response received');
                 error.message = 'Network error - unable to connect to server';
-            } else {
-                console.error('Request setup error:', error.message);
             }
             
             throw error;
@@ -105,6 +97,7 @@ const authApi = {
         }
     },
 
+    // SIMPLIFIED: Just check if API is responding
     checkApiHealth: async () => {
         try {
             const response = await api.get('');
@@ -113,32 +106,10 @@ const authApi = {
             console.error('API health check failed:', error);
             return false;
         }
-    },
-
-    // New: Direct test endpoint
-    testConnection: async () => {
-        try {
-            const apiUrl = getApiBaseUrl();
-            console.log('Testing connection to:', apiUrl);
-            
-            const response = await fetch(apiUrl, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                mode: 'cors'
-            });
-            
-            console.log('Connection test response:', response);
-            return response.ok;
-        } catch (error) {
-            console.error('Connection test failed:', error);
-            return false;
-        }
     }
 };
 
-// Super Manager API (keep existing functions, just ensure they use the corrected api instance)
+// Super Manager API - KEEP ALL YOUR FUNCTIONS
 const superManagerApi = {
     getDashboardStats: async () => {
         try {
@@ -150,11 +121,208 @@ const superManagerApi = {
         }
     },
 
-    // ... keep all your existing superManagerApi functions as they are ...
-    // (No changes needed to the actual function implementations)
+    getUsers: async () => {
+        try {
+            const response = await api.get('supermanager/users/');
+            return response.data;
+        } catch (error) {
+            console.error('Failed to fetch users:', error);
+            throw error;
+        }
+    },
+
+    getUser: async (userId) => {
+        try {
+            const response = await api.get(`supermanager/users/${userId}/`);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to fetch user:', error);
+            throw error;
+        }
+    },
+
+    createUser: async (userData) => {
+        try {
+            const response = await api.post('supermanager/users/', userData);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to create user:', error.response?.data);
+            throw error;
+        }
+    },
+
+    updateUser: async (userId, userData) => {
+        try {
+            const response = await api.patch(`supermanager/users/${userId}/`, userData);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to update user:', error.response?.data);
+            throw error;
+        }
+    },
+
+    deleteUser: async (userId) => {
+        try {
+            const response = await api.delete(`supermanager/users/${userId}/`);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to delete user:', error.response?.data);
+            throw error;
+        }
+    },
+
+    getRecentActivities: async (limit = 10) => {
+        try {
+            const response = await api.get(`recent-activity/?limit=${limit}`);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to fetch recent activities:', error);
+            throw error;
+        }
+    },
+
+    getActivitiesByRole: async (role) => {
+        try {
+            const response = await api.get(`recent-activity/?user_role=${role}`);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to fetch activities by role:', error);
+            throw error;
+        }
+    },
+
+    getProjects: async () => {
+        try {
+            const response = await api.get('supermanager/projects/');
+            return response.data;
+        } catch (error) {
+            console.error('Failed to fetch projects:', error);
+            throw error;
+        }
+    },
+
+    getProject: async (id) => {
+        try {
+            const response = await api.get(`supermanager/projects/${id}/`);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to fetch project:', error);
+            throw error;
+        }
+    },
+
+    createProject: async (projectData) => {
+        try {
+            const response = await api.post('supermanager/projects/', projectData);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to create project:', error.response?.data);
+            throw error;
+        }
+    },
+
+    updateProject: async (id, projectData) => {
+        try {
+            const response = await api.patch(`supermanager/projects/${id}/`, projectData);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to update project:', error.response?.data);
+            throw error;
+        }
+    },
+
+    deleteProject: async (id) => {
+        try {
+            const response = await api.delete(`supermanager/projects/${id}/`);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to delete project:', error.response?.data);
+            throw error;
+        }
+    },
+
+    getTasks: async () => {
+        try {
+            const response = await api.get('supermanager/tasks/');
+            return response.data;
+        } catch (error) {
+            console.error('Failed to fetch tasks:', error);
+            throw error;
+        }
+    },
+
+    getTasksByProject: async (projectId) => {
+        try {
+            const response = await api.get(`supermanager/tasks/?project=${projectId}&annotate_overdue=true`);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to fetch project tasks:', error);
+            throw error;
+        }
+    },
+
+    getTask: async (taskId) => {
+        try {
+            const response = await api.get(`supermanager/tasks/${taskId}/`);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to fetch task:', error);
+            throw error;
+        }
+    },
+
+    createTask: async (taskData) => {
+        try {
+            const response = await api.post('supermanager/tasks/', taskData);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to create task:', error.response?.data);
+            throw error;
+        }
+    },
+
+    updateTask: async (taskId, taskData) => {
+        try {
+            const response = await api.patch(`supermanager/tasks/${taskId}/`, taskData);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to update task:', error.response?.data);
+            throw error;
+        }
+    },
+
+    updateTaskStatus: async (taskId, status) => {
+        try {
+            const response = await api.patch(`supermanager/tasks/${taskId}/status/`, { status });
+            return response.data;
+        } catch (error) {
+            console.error('Failed to update task status:', error.response?.data);
+            throw error;
+        }
+    },
+
+    deleteTask: async (taskId) => {
+        try {
+            const response = await api.delete(`supermanager/tasks/${taskId}/`);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to delete task:', error.response?.data);
+            throw error;
+        }
+    },
+
+    generateReport: async (reportData) => {
+        try {
+            const response = await api.post('supermanager/reports/', reportData);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to generate report:', error.response?.data);
+            throw error;
+        }
+    }
 };
 
-// Manager API (keep existing functions)
+// Manager API - KEEP ALL YOUR FUNCTIONS
 const managerApi = {
     getDashboardStats: async () => {
         try {
@@ -165,10 +333,79 @@ const managerApi = {
             throw error;
         }
     },
-    // ... rest of your managerApi functions ...
+
+    getProjects: async () => {
+        try {
+            const response = await api.get('manager/projects/');
+            return response.data;
+        } catch (error) {
+            console.error('Failed to fetch manager projects:', error);
+            throw error;
+        }
+    },
+
+    getProject: async (projectId) => {
+        try {
+            const response = await api.get(`manager/projects/${projectId}/`);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to fetch project:', error);
+            throw error;
+        }
+    },
+
+    getTasksByProject: async (projectId) => {
+        try {
+            const response = await api.get(`manager/tasks/?project=${projectId}`);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to fetch project tasks:', error);
+            throw error;
+        }
+    },
+
+    getEmployees: async () => {
+        try {
+            const response = await api.get('manager/employees/');
+            return response.data;
+        } catch (error) {
+            console.error('Failed to fetch employees:', error);
+            throw error;
+        }
+    },
+
+    createTask: async (taskData) => {
+        try {
+            const response = await api.post('manager/tasks/', taskData);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to create task:', error.response?.data);
+            throw error;
+        }
+    },
+
+    updateTask: async (taskId, taskData) => {
+        try {
+            const response = await api.patch(`manager/tasks/${taskId}/`, taskData);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to update task:', error.response?.data);
+            throw error;
+        }
+    },
+
+    deleteTask: async (taskId) => {
+        try {
+            const response = await api.delete(`manager/tasks/${taskId}/`);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to delete task:', error.response?.data);
+            throw error;
+        }
+    }
 };
 
-// Employee API (keep existing functions)
+// Employee API - KEEP ALL YOUR FUNCTIONS
 const employeeApi = {
     getTasks: async () => {
         try {
@@ -179,7 +416,39 @@ const employeeApi = {
             throw error;
         }
     },
-    // ... rest of your employeeApi functions ...
+
+    updateTaskStatus: async (taskId, status, notes) => {
+        try {
+            const response = await api.patch(`employee/tasks/${taskId}/`, {
+                status,
+                notes
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Failed to update task status:', error.response?.data);
+            throw error;
+        }
+    },
+
+    createTask: async (taskData) => {
+        try {
+            const response = await api.post('employee/tasks/', taskData);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to create task:', error.response?.data);
+            throw error;
+        }
+    },
+
+    deleteTask: async (taskId) => {
+        try {
+            const response = await api.delete(`employee/tasks/${taskId}/`);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to delete task:', error.response?.data);
+            throw error;
+        }
+    }
 };
 
 // Request interceptor for JWT token
@@ -188,12 +457,6 @@ api.interceptors.request.use((config) => {
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
-    
-    // Add origin header for CORS
-    if (window.location.origin) {
-        config.headers['Origin'] = window.location.origin;
-    }
-    
     return config;
 }, (error) => {
     return Promise.reject(error);
@@ -203,11 +466,8 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
     (response) => response,
     async (error) => {
-        console.log('Interceptor caught error:', error.response?.status);
-        
         if (!error.response) {
-            // Network error
-            error.message = 'Network error - please check your connection and ensure the server is running';
+            error.message = 'Network error - please check your connection';
             return Promise.reject(error);
         }
 
@@ -223,7 +483,6 @@ api.interceptors.response.use(
             originalRequest._retry = true;
 
             try {
-                console.log('Attempting token refresh...');
                 const newToken = await authApi.refreshToken();
                 originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
                 return api(originalRequest);

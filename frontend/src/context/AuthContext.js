@@ -53,14 +53,9 @@ export function AuthProvider({ children }) {
         try {
             console.log('Attempting login for user:', username);
             
-            // Test API connection first
-            console.log('Testing API connection...');
-            const isConnected = await authApi.testConnection();
-            if (!isConnected) {
-                throw new Error('Cannot connect to server. Please try again later.');
-            }
+            // REMOVED: API connection test before login
+            // Just proceed directly to login
             
-            // Use the direct fetch method from authApi
             const response = await authApi.login({ username, password });
 
             const { access, refresh, user: userData } = response;

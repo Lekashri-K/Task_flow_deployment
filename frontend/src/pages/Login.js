@@ -58,87 +58,8 @@ export default function Login() {
         }
     };
 
-    // TEST FUNCTION - Optional direct API test
-    const testDirectLogin = async () => {
-        try {
-            const API_URL = window.location.origin + '/api/';
-            console.log('Testing direct login with URL:', `${API_URL}login/`);
-
-            const response = await fetch(`${API_URL}login/`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: 'wronguser', password: 'wrongpass' }),
-            });
-
-            const data = await response.json();
-            console.log('Direct test response data:', data);
-            console.log('Response status:', response.status);
-
-            if (!response.ok) {
-                console.log('Error from server:', data.detail || data);
-            }
-        } catch (error) {
-            console.log('Direct test fetch error:', error);
-        }
-    };
-
-    const testApiConnection = async () => {
-        try {
-            const API_URL = window.location.origin + '/api/';
-            console.log('Testing API connection to:', API_URL);
-            
-            const response = await fetch(API_URL, {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
-            });
-            
-            console.log('API connection test response:', response);
-            console.log('Response status:', response.status);
-            
-            if (response.ok) {
-                const data = await response.json();
-                console.log('API test successful:', data);
-                setError('API connection successful!');
-            } else {
-                setError('API connection failed with status: ' + response.status);
-            }
-        } catch (error) {
-            console.log('API connection test error:', error);
-            setError('API connection failed: ' + error.message);
-        }
-    };
-
     return (
         <div className="auth-container">
-            {/* Debug buttons - remove in production */}
-            <div style={{
-                position: 'absolute',
-                top: '20px',
-                left: '20px',
-                display: 'flex',
-                gap: '10px',
-                zIndex: 1000
-            }}>
-                <button onClick={testDirectLogin} style={{
-                    padding: '8px 12px',
-                    background: '#f0f0f0',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    fontSize: '12px'
-                }}>
-                    Test API Login
-                </button>
-                <button onClick={testApiConnection} style={{
-                    padding: '8px 12px',
-                    background: '#e0f0ff',
-                    border: '1px solid #4a6cf7',
-                    borderRadius: '4px',
-                    fontSize: '12px'
-                }}>
-                    Test API Connection
-                </button>
-            </div>
-
             <div
                 style={{
                     position: 'absolute',

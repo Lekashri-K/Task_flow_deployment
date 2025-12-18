@@ -18,6 +18,8 @@ urlpatterns = [
     path('', views.HealthCheckView.as_view(), name='health-check'),
     path('login/', views.LoginView.as_view(), name='login'),
      path('debug/', views.FileSystemDebugView.as_view(), name='filesystem-debug'),
+    # In tasks/urls.py, add:
+path('build-debug/', views.BuildDebugView.as_view(), name='build-debug'),
     # Protected endpoints
     path('user/', views.UserView.as_view(), name='user'),
     path('supermanager-dashboard-stats/', views.SuperManagerDashboardStats.as_view(), name='supermanager-dashboard-stats'),

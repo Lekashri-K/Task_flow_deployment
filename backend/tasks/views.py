@@ -89,58 +89,75 @@ class FileSystemDebugView(APIView):
         return Response(info)
 # ========== FrontendAppView with DEBUGGING ==========
 class FrontendAppView(View):
-    permission_classes = [AllowAny]
-    
     def get(self, request, *args, **kwargs):
-        import os
+        # IMPORTANT: If the request is for a static file that wasn't found,
+        # return a 404 instead of index.html. This prevents MIME type errors.
+        if request.path.startswith(settings.STATIC_URL):
+            return HttpResponse(status=404)
+
+        try:
+            # Point to where collectstatic puts the file
+            index_path = os.path.join(settings.BASE_DIR, 'frontend_build', 'index.html')
+            with open(index_path, 'r', encoding='utf-8') as f:
+                return HttpResponse(f.read())
+        except FileNotFoundError:
+            return HttpResponse(
+                "React build not found. Run collectstatic and ensure frontend_build exists.",
+                status=501
+            )
+# class FrontendAppView(View):
+#     permission_classes = [AllowAny]
+    
+#     def get(self, request, *args, **kwargs):
+#         import os
         
-        # Try these locations IN ORDER
-        locations = [
-            # 1. Where build.sh SHOULD put it
-            '/opt/render/project/src/frontend_build/index.html',
+#         # Try these locations IN ORDER
+#         locations = [
+#             # 1. Where build.sh SHOULD put it
+#             '/opt/render/project/src/frontend_build/index.html',
             
-            # 2. In the React build directory (if not copied)
-            '/opt/render/project/src/frontend/build/index.html',
+#             # 2. In the React build directory (if not copied)
+#             '/opt/render/project/src/frontend/build/index.html',
             
-            # 3. In backend/frontend_build
-            '/opt/render/project/src/backend/frontend_build/index.html',
+#             # 3. In backend/frontend_build
+#             '/opt/render/project/src/backend/frontend_build/index.html',
             
-            # 4. Current directory
-            os.path.join(os.getcwd(), 'frontend_build', 'index.html'),
+#             # 4. Current directory
+#             os.path.join(os.getcwd(), 'frontend_build', 'index.html'),
             
-            # 5. Base directory
-            os.path.join(settings.BASE_DIR, 'frontend_build', 'index.html'),
-        ]
+#             # 5. Base directory
+#             os.path.join(settings.BASE_DIR, 'frontend_build', 'index.html'),
+#         ]
         
-        for location in locations:
-            if os.path.exists(location):
-                try:
-                    with open(location, 'r', encoding='utf-8') as f:
-                        return HttpResponse(f.read())
-                except Exception as e:
-                    print(f"Error reading {location}: {e}")
-                    continue
+#         for location in locations:
+#             if os.path.exists(location):
+#                 try:
+#                     with open(location, 'r', encoding='utf-8') as f:
+#                         return HttpResponse(f.read())
+#                 except Exception as e:
+#                     print(f"Error reading {location}: {e}")
+#                     continue
         
-        # If not found, create a simple test page
-        return HttpResponse(f"""
-        <html>
-        <head><title>TaskFlow - Debug</title></head>
-        <body>
-            <h1>Debug Info</h1>
-            <p>BASE_DIR: {settings.BASE_DIR}</p>
-            <p>Current dir: {os.getcwd()}</p>
-            <h2>Checked locations:</h2>
-            <ul>
-                {"".join([f'<li>{loc} - {"✓" if os.path.exists(loc) else "✗"}</li>' for loc in locations])}
-            </ul>
-            <h2>Directory listing of /opt/render/project/src:</h2>
-            <ul>
-                {"".join([f'<li>{f}</li>' for f in os.listdir('/opt/render/project/src')])}
-            </ul>
-            <p><a href="/api/build-debug/">More debug info</a></p>
-        </body>
-        </html>
-        """)
+#         # If not found, create a simple test page
+#         return HttpResponse(f"""
+#         <html>
+#         <head><title>TaskFlow - Debug</title></head>
+#         <body>
+#             <h1>Debug Info</h1>
+#             <p>BASE_DIR: {settings.BASE_DIR}</p>
+#             <p>Current dir: {os.getcwd()}</p>
+#             <h2>Checked locations:</h2>
+#             <ul>
+#                 {"".join([f'<li>{loc} - {"✓" if os.path.exists(loc) else "✗"}</li>' for loc in locations])}
+#             </ul>
+#             <h2>Directory listing of /opt/render/project/src:</h2>
+#             <ul>
+#                 {"".join([f'<li>{f}</li>' for f in os.listdir('/opt/render/project/src')])}
+#             </ul>
+#             <p><a href="/api/build-debug/">More debug info</a></p>
+#         </body>
+#         </html>
+#         """)
 # ========== HealthCheckView with path info ==========
 class HealthCheckView(APIView):
     permission_classes = [AllowAny]

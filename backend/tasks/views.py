@@ -16,6 +16,33 @@ from django.db.models.functions import Coalesce
 from .models import CustomUser, Project, Task
 from .serializers import UserSerializer, ProjectSerializer, TaskSerializer
 # Add this as the FIRST view in your tasks/views.py
+class BuildDebugView(APIView):
+    permission_classes = [AllowAny]
+    
+    def get(self, request):
+        import os
+        import subprocess
+        
+        # Find all build directories
+        find_cmd = "find /opt/render/project -name 'build' -type d 2>/dev/null"
+        result = subprocess.run(find_cmd, shell=True, capture_output=True, text=True)
+        
+        builds = []
+        for build_dir in result.stdout.strip().split('\n'):
+            if build_dir and os.path.exists(build_dir):
+                builds.append({
+                    'path': build_dir,
+                    'has_index': os.path.exists(os.path.join(build_dir, 'index.html')),
+                    'files': os.listdir(build_dir) if os.path.exists(build_dir) else []
+                })
+        
+        return Response({
+            'base_dir': str(settings.BASE_DIR),
+            'current_dir': os.getcwd(),
+            'all_build_directories': builds,
+            'frontend_directory_exists': os.path.exists('/opt/render/project/src/frontend'),
+            'frontend_build_exists': os.path.exists('/opt/render/project/src/frontend/build'),
+        })
 class FileSystemDebugView(APIView):
     permission_classes = [AllowAny]
     

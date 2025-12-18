@@ -11,11 +11,11 @@ router.register(r'manager/tasks', views.ManagerTaskViewSet, basename='manager-ta
 router.register(r'employee/tasks', views.EmployeeTaskViewSet, basename='employee-tasks')
 
 urlpatterns = [
-    # Public endpoints (no authentication required)
+    # Public endpoints
     path('', views.HealthCheckView.as_view(), name='health-check'),
     path('login/', views.LoginView.as_view(), name='login'),
     
-    # Protected endpoints (authentication required)
+    # Protected endpoints
     path('user/', views.UserView.as_view(), name='user'),
     path('supermanager-dashboard-stats/', views.SuperManagerDashboardStats.as_view(), name='supermanager-dashboard-stats'),
     path('manager/employees/', views.ManagerEmployeeListView.as_view(), name='manager-employees'),
@@ -23,7 +23,6 @@ urlpatterns = [
     path('recent-activity/', views.RecentActivityView.as_view(), name='recent-activity'),
     path('reports/', views.ReportView.as_view(), name='reports'),
     path('', include(router.urls)),
-    
-    # Frontend catch-all route - MUST BE LAST
-    re_path(r'^.*$', views.FrontendAppView.as_view(), name='frontend'),
 ]
+
+# IMPORTANT: This catch-all should ONLY be in the main urls.py, not here

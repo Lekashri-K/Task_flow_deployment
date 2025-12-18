@@ -61,59 +61,103 @@ class FileSystemDebugView(APIView):
         
         return Response(info)
 # ========== FrontendAppView with DEBUGGING ==========
+# Replace your FrontendAppView with this:
 class FrontendAppView(View):
     permission_classes = [AllowAny]
     
     def get(self, request, *args, **kwargs):
+        import os
+        from django.conf import settings
+        
+        # Log for debugging
+        print(f"FrontendAppView called. BASE_DIR: {settings.BASE_DIR}")
+        print(f"Current dir: {os.getcwd()}")
+        
+        # Try multiple possible locations
+        possible_locations = [
+            # Location 1: In backend/frontend_build (where build.sh copies it)
+            os.path.join(settings.BASE_DIR, 'frontend_build', 'index.html'),
+            
+            # Location 2: In current directory
+            os.path.join(os.getcwd(), 'frontend_build', 'index.html'),
+            
+            # Location 3: In parent directory
+            os.path.join(os.path.dirname(os.getcwd()), 'frontend_build', 'index.html'),
+            
+            # Location 4: Render specific path
+            '/opt/render/project/src/backend/frontend_build/index.html',
+            '/opt/render/project/src/frontend_build/index.html',
+        ]
+        
+        print("Checking for index.html in these locations:")
+        for location in possible_locations:
+            exists = os.path.exists(location)
+            print(f"  {location}: {'EXISTS' if exists else 'NOT FOUND'}")
+            if exists:
+                try:
+                    with open(location, 'r', encoding='utf-8') as f:
+                        content = f.read()
+                    print(f"Successfully loaded index.html from: {location}")
+                    return HttpResponse(content)
+                except Exception as e:
+                    print(f"Error reading {location}: {e}")
+        
+        # If not found, show detailed error
+        error_html = """
+        <html>
+        <head><title>TaskFlow - Setup Required</title></head>
+        <body style="font-family: Arial, sans-serif; padding: 40px; max-width: 800px; margin: 0 auto;">
+            <h1>⚠️ Frontend Not Built</h1>
+            <p>The React frontend has not been built or copied to the correct location.</p>
+            
+            <h2>Debug Information:</h2>
+            <ul>
+        """
+        
+        error_html += f"<li><strong>BASE_DIR:</strong> {settings.BASE_DIR}</li>"
+        error_html += f"<li><strong>Current Directory:</strong> {os.getcwd()}</li>"
+        error_html += f"<li><strong>Files in BASE_DIR:</strong><ul>"
+        
         try:
-            # Try multiple paths to find index.html
-            possible_paths = [
-                os.path.join(settings.BASE_DIR, 'frontend_build', 'index.html'),
-                os.path.join(settings.BASE_DIR, '..', 'frontend_build', 'index.html'),
-                os.path.join(settings.BASE_DIR, '..', '..', 'frontend_build', 'index.html'),
-                '/opt/render/project/src/backend/frontend_build/index.html',
-                os.path.join(os.getcwd(), 'frontend_build', 'index.html'),
-            ]
-            
-            for path in possible_paths:
-                if os.path.exists(path):
-                    print(f"Found index.html at: {path}")
-                    with open(path, 'r', encoding='utf-8') as f:
-                        return HttpResponse(f.read())
-            
-            # If not found, show debug info
-            debug_info = f"""
-            <h3>index.html not found!</h3>
-            <p><strong>BASE_DIR:</strong> {settings.BASE_DIR}</p>
-            <p><strong>Current directory:</strong> {os.getcwd()}</p>
-            <p><strong>Paths checked:</strong></p>
-            <ul>
-            """
-            for path in possible_paths:
-                debug_info += f"<li>{path} - {os.path.exists(path)}</li>"
-            
-            debug_info += f"""
-            </ul>
-            <p><strong>Files in BASE_DIR:</strong></p>
-            <ul>
-            """
-            try:
-                files = os.listdir(settings.BASE_DIR)
-                for file in files:
-                    debug_info += f"<li>{file}</li>"
-            except Exception as e:
-                debug_info += f"<li>Error listing files: {e}</li>"
-            
-            debug_info += "</ul>"
-            return HttpResponse(debug_info, status=404)
-            
+            files = os.listdir(settings.BASE_DIR)
+            for file in files:
+                full_path = os.path.join(settings.BASE_DIR, file)
+                is_dir = os.path.isdir(full_path)
+                error_html += f"<li>{file} {'(directory)' if is_dir else ''}</li>"
         except Exception as e:
-            return HttpResponse(
-                f"Error serving frontend: {str(e)}<br>"
-                f"BASE_DIR: {settings.BASE_DIR}",
-                status=500,
-            )
-
+            error_html += f"<li>Error: {e}</li>"
+        
+        error_html += "</ul></li>"
+        
+        error_html += """
+            </ul>
+            
+            <h2>Expected Structure:</h2>
+            <pre>
+            backend/
+            ├── frontend_build/     ← React build should be here
+            │   ├── index.html
+            │   └── static/
+            ├── backend/
+            │   └── settings.py
+            ├── tasks/
+            ├── manage.py
+            └── requirements.txt
+            </pre>
+            
+            <h2>Solution:</h2>
+            <ol>
+                <li>Check Render build logs for errors during <code>npm run build</code></li>
+                <li>Verify <code>build.sh</code> is copying files correctly</li>
+                <li>Check that <code>frontend/package.json</code> has <code>"homepage": "."</code></li>
+            </ol>
+            
+            <p><a href="/api/debug/">Click here for detailed debug info</a></p>
+        </body>
+        </html>
+        """
+        
+        return HttpResponse(error_html, status=404)
 # ========== HealthCheckView with path info ==========
 class HealthCheckView(APIView):
     permission_classes = [AllowAny]

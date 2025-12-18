@@ -1,39 +1,27 @@
-from django.urls import path, include
-from rest_framework.permissions import AllowAny
-from .views import (
-    LoginView, UserView, SuperManagerDashboardStats,
-    SuperManagerUserViewSet, SuperManagerProjectViewSet,
-    SuperManagerTaskViewSet, RecentActivityView,
-    ManagerProjectViewSet, ManagerTaskViewSet,
-    ManagerEmployeeListView, ManagerDashboardStats,
-    EmployeeTaskViewSet, ReportView,
-)
+# tasks/urls.py
+
+from django.urls import path, include, re_path
 from rest_framework.routers import DefaultRouter
+from . import views  # Import views module directly
 
 router = DefaultRouter()
-router.register(r'supermanager/users', SuperManagerUserViewSet, basename='supermanager-users')
-router.register(r'supermanager/projects', SuperManagerProjectViewSet, basename='supermanager-projects')
-router.register(r'supermanager/tasks', SuperManagerTaskViewSet, basename='supermanager-tasks')
-router.register(r'manager/projects', ManagerProjectViewSet, basename='manager-projects')
-router.register(r'manager/tasks', ManagerTaskViewSet, basename='manager-tasks')
-router.register(r'employee/tasks', EmployeeTaskViewSet, basename='employee-tasks')
+router.register(r'supermanager/users', views.SuperManagerUserViewSet, basename='supermanager-users')
+router.register(r'supermanager/projects', views.SuperManagerProjectViewSet, basename='supermanager-projects')
+router.register(r'supermanager/tasks', views.SuperManagerTaskViewSet, basename='supermanager-tasks')
+router.register(r'manager/projects', views.ManagerProjectViewSet, basename='manager-projects')
+router.register(r'manager/tasks', views.ManagerTaskViewSet, basename='manager-tasks')
+router.register(r'employee/tasks', views.EmployeeTaskViewSet, basename='employee-tasks')
 
 urlpatterns = [
-    # Authentication
-    path('login/', LoginView.as_view(permission_classes=[AllowAny]), name='login'),
-    path('user/', UserView.as_view(), name='user'),
-    
-    # Dashboard stats
-    path('supermanager-dashboard-stats/', SuperManagerDashboardStats.as_view(), name='supermanager-dashboard-stats'),
-    path('manager-dashboard-stats/', ManagerDashboardStats.as_view(), name='manager-dashboard-stats'),
-    
-    # Manager endpoints
-    path('manager/employees/', ManagerEmployeeListView.as_view(), name='manager-employees'),
-    
-    # Activity & Reports
-    path('recent-activity/', RecentActivityView.as_view(), name='recent-activity'),
-    path('reports/', ReportView.as_view(), name='reports'),
-    
-    # API routes
+    path('login/', views.LoginView.as_view(), name='login'),
+    path('user/', views.UserView.as_view(), name='user'),
+    path('supermanager-dashboard-stats/', views.SuperManagerDashboardStats.as_view(), name='supermanager-dashboard-stats'),
+    path('manager/employees/', views.ManagerEmployeeListView.as_view(), name='manager-employees'),
+    path('manager-dashboard-stats/', views.ManagerDashboardStats.as_view(), name='manager-dashboard-stats'),
+    path('recent-activity/', views.RecentActivityView.as_view(), name='recent-activity'),
+    path('reports/', views.ReportView.as_view(), name='reports'),
     path('', include(router.urls)),
+    
+    # Use the FrontendAppView from views module
+    re_path(r'^.*$', views.FrontendAppView.as_view(), name='frontend'),
 ]

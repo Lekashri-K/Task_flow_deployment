@@ -3,8 +3,12 @@ from pathlib import Path
 from datetime import timedelta
 
 # Build paths inside the project
+# IMPORTANT: For your structure: main/backend/backend/settings.py
 # BASE_DIR should be: /opt/render/project/src/backend (where manage.py is)
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+print(f"BASE_DIR: {BASE_DIR}")
+print(f"Current working directory: {os.getcwd()}")
 
 # SECURITY
 SECRET_KEY = os.environ.get('SECRET_KEY', 'fallback-secret-key')
@@ -61,7 +65,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
